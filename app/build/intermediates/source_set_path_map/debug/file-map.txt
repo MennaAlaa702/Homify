@@ -1,0 +1,38 @@
+com.homify.app-pngs-0 D:\2_semester(third year)\Mobile App Development (it 305)\finalfinalproject\Finalproject\Homify_Project (1)\Homify\app\build\generated\res\pngs\debug
+com.homify.app-resValues-1 D:\2_semester(third year)\Mobile App Development (it 305)\finalfinalproject\Finalproject\Homify_Project (1)\Homify\app\build\generated\res\resValues\debug
+com.homify.app-packageDebugResources-2 D:\2_semester(third year)\Mobile App Development (it 305)\finalfinalproject\Finalproject\Homify_Project (1)\Homify\app\build\intermediates\incremental\debug\packageDebugResources\merged.dir
+com.homify.app-packageDebugResources-3 D:\2_semester(third year)\Mobile App Development (it 305)\finalfinalproject\Finalproject\Homify_Project (1)\Homify\app\build\intermediates\incremental\debug\packageDebugResources\stripped.dir
+com.homify.app-merged_res-4 D:\2_semester(third year)\Mobile App Development (it 305)\finalfinalproject\Finalproject\Homify_Project (1)\Homify\app\build\intermediates\merged_res\debug
+com.homify.app-debug-5 D:\2_semester(third year)\Mobile App Development (it 305)\finalfinalproject\Finalproject\Homify_Project (1)\Homify\app\src\debug\res
+com.homify.app-main-6 D:\2_semester(third year)\Mobile App Development (it 305)\finalfinalproject\Finalproject\Homify_Project (1)\Homify\app\src\main\res
+com.homify.app-jetified-activity-1.8.0-7 D:\AndroidGradle\caches\transforms-3\05c48335d9e6ae6e5e0301ec725900ea\transformed\jetified-activity-1.8.0\res
+com.homify.app-recyclerview-1.3.2-8 D:\AndroidGradle\caches\transforms-3\0d20a08eeee1966024da025a66452fc3\transformed\recyclerview-1.3.2\res
+com.homify.app-drawerlayout-1.1.1-9 D:\AndroidGradle\caches\transforms-3\0f1685808f16a41efba6a1fbf4d27d70\transformed\drawerlayout-1.1.1\res
+com.homify.app-lifecycle-runtime-2.6.1-10 D:\AndroidGradle\caches\transforms-3\19e4030d9138be6659621bb8f10fc4d8\transformed\lifecycle-runtime-2.6.1\res
+com.homify.app-jetified-core-ktx-1.12.0-11 D:\AndroidGradle\caches\transforms-3\1ce62d3f0df60fc60a471f7291870b20\transformed\jetified-core-ktx-1.12.0\res
+com.homify.app-coordinatorlayout-1.1.0-12 D:\AndroidGradle\caches\transforms-3\1e3150632d027ee9bde3fbffc7366c71\transformed\coordinatorlayout-1.1.0\res
+com.homify.app-transition-1.2.0-13 D:\AndroidGradle\caches\transforms-3\2e81ad5d808600ce4c4fabc4aa90c100\transformed\transition-1.2.0\res
+com.homify.app-sqlite-2.4.0-14 D:\AndroidGradle\caches\transforms-3\33f93c741acce9d3a9597933e0ea7003\transformed\sqlite-2.4.0\res
+com.homify.app-constraintlayout-2.1.4-15 D:\AndroidGradle\caches\transforms-3\49435ce3453524fc804e41ccc47f2473\transformed\constraintlayout-2.1.4\res
+com.homify.app-jetified-emoji2-views-helper-1.2.0-16 D:\AndroidGradle\caches\transforms-3\4968d5843ae49c4d274c14f112cc5f39\transformed\jetified-emoji2-views-helper-1.2.0\res
+com.homify.app-jetified-profileinstaller-1.3.0-17 D:\AndroidGradle\caches\transforms-3\498482daeca7e1b2a1450d2707040743\transformed\jetified-profileinstaller-1.3.0\res
+com.homify.app-jetified-appcompat-resources-1.6.1-18 D:\AndroidGradle\caches\transforms-3\4f360595a4d45aed1ff5b809ae59b608\transformed\jetified-appcompat-resources-1.6.1\res
+com.homify.app-appcompat-1.6.1-19 D:\AndroidGradle\caches\transforms-3\547fea27e37a3685e84167f2ffc3f8a0\transformed\appcompat-1.6.1\res
+com.homify.app-lifecycle-livedata-2.6.1-20 D:\AndroidGradle\caches\transforms-3\5f438c4d62abd4ef0e7fa7a9171f3a99\transformed\lifecycle-livedata-2.6.1\res
+com.homify.app-lifecycle-viewmodel-2.6.1-21 D:\AndroidGradle\caches\transforms-3\6004c5fc0ef70de5dbc64d4996f27a7b\transformed\lifecycle-viewmodel-2.6.1\res
+com.homify.app-jetified-annotation-experimental-1.3.0-22 D:\AndroidGradle\caches\transforms-3\63bd3f0342e78a2f7ca0dae904199161\transformed\jetified-annotation-experimental-1.3.0\res
+com.homify.app-core-runtime-2.2.0-23 D:\AndroidGradle\caches\transforms-3\7107afd79c504ad9b646039c49df771a\transformed\core-runtime-2.2.0\res
+com.homify.app-jetified-emoji2-1.2.0-24 D:\AndroidGradle\caches\transforms-3\8146f4c5b03300b2a576dfecee518778\transformed\jetified-emoji2-1.2.0\res
+com.homify.app-jetified-savedstate-1.2.1-25 D:\AndroidGradle\caches\transforms-3\8833869161b31eb28961ba01465854b6\transformed\jetified-savedstate-1.2.1\res
+com.homify.app-room-runtime-2.6.1-26 D:\AndroidGradle\caches\transforms-3\8cd5799671618cc37c5842000e4825fa\transformed\room-runtime-2.6.1\res
+com.homify.app-jetified-lifecycle-viewmodel-savedstate-2.6.1-27 D:\AndroidGradle\caches\transforms-3\ad007a1d11fb7a5356d865c3da766049\transformed\jetified-lifecycle-viewmodel-savedstate-2.6.1\res
+com.homify.app-jetified-lifecycle-process-2.6.1-28 D:\AndroidGradle\caches\transforms-3\b7eb702c33adca2242d54d4d9ce69039\transformed\jetified-lifecycle-process-2.6.1\res
+com.homify.app-jetified-customview-poolingcontainer-1.0.0-29 D:\AndroidGradle\caches\transforms-3\c875fdb94cfede7e625f1ac5fa556be7\transformed\jetified-customview-poolingcontainer-1.0.0\res
+com.homify.app-core-1.12.0-30 D:\AndroidGradle\caches\transforms-3\c8e0f582f84b6db24d1604e35f780ecd\transformed\core-1.12.0\res
+com.homify.app-fragment-1.3.6-31 D:\AndroidGradle\caches\transforms-3\d0bb96b16c6a32bb15fc45696ef2020f\transformed\fragment-1.3.6\res
+com.homify.app-jetified-startup-runtime-1.1.1-32 D:\AndroidGradle\caches\transforms-3\d4f4b33bd9f8e39540810d3f57c9647a\transformed\jetified-startup-runtime-1.1.1\res
+com.homify.app-lifecycle-livedata-core-2.6.1-33 D:\AndroidGradle\caches\transforms-3\e2d12991baf79c8e1f44a4805ba7ca42\transformed\lifecycle-livedata-core-2.6.1\res
+com.homify.app-material-1.11.0-34 D:\AndroidGradle\caches\transforms-3\e59f4d0635ea4973ee1ddc1e7c64ac5a\transformed\material-1.11.0\res
+com.homify.app-cardview-1.0.0-35 D:\AndroidGradle\caches\transforms-3\eb3d249e21d321cb60afafafb02cb6f9\transformed\cardview-1.0.0\res
+com.homify.app-jetified-viewpager2-1.1.0-beta02-36 D:\AndroidGradle\caches\transforms-3\f6333c3c825876a6d4264ca0837c8166\transformed\jetified-viewpager2-1.1.0-beta02\res
+com.homify.app-sqlite-framework-2.4.0-37 D:\AndroidGradle\caches\transforms-3\f978ac0f1aa9ac9b5eaaa7d85ff42553\transformed\sqlite-framework-2.4.0\res

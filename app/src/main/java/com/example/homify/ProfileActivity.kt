@@ -1,5 +1,5 @@
 package com.example.homify
-
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -25,9 +25,10 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val splashScreen = installSplashScreen()
+        setTheme(R.style.Theme_Homify)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
-
         val tvFullName = findViewById<TextView>(R.id.tvFullName)
         val tvEmail = findViewById<TextView>(R.id.tvEmail)
         val tvPhone = findViewById<TextView>(R.id.tvPhone)

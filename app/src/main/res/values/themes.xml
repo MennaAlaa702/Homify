@@ -1,13 +1,30 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.Homify" parent="Theme.Material3.DayNight.NoActionBar">
 
+    <!-- 1. ثيم البداية (SplashScreen) - ده المسؤول عن منع السواد -->
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <!-- لون الخلفية البيج بتاع Homify -->
+        <item name="windowSplashScreenBackground">#F9F6F0</item>
+        <!-- إخفاء الأيقونة تماماً -->
+        <item name="windowSplashScreenAnimatedIcon">@android:color/transparent</item>
+        <!-- أهم سطر: الثيم اللي الأبلكيشن هيروحله بعد ما يفتح -->
+        <item name="postSplashScreenTheme">@style/Theme.Homify</item>
+    </style>
+
+    <!-- 2. الثيم الأساسي للتطبيق -->
+    <style name="Base.Theme.Homify" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:windowBackground">#F9F6F0</item>
         <item name="android:colorBackground">#F9F6F0</item>
+
+        <!-- شيلي السطر بتاع postSplashScreenTheme من هنا لأنه بيعمل Loop ايرور -->
+
+        <!-- إضافات لضمان السلاسة على Samsung A17 -->
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowDisablePreview">true</item>
     </style>
 
     <style name="Theme.Homify" parent="Base.Theme.Homify" />
 
+    <!-- باقي الـ Styles بتاعتك مظبوطة جداً -->
     <style name="CustomPopupMenu" parent="Widget.AppCompat.Light.PopupMenu">
         <item name="android:popupBackground">@drawable/menu_background</item>
         <item name="android:panelBackground">@android:color/transparent</item>
@@ -17,7 +34,5 @@
     <style name="CircleImage" parent="">
         <item name="cornerSize">50%</item>
     </style>
-
-
 
 </resources>

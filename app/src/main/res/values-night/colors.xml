@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ألوان التطبيق في الدارك مود (الليل) -->
+    <color name="screen_background">#121212</color> <!-- خلفية سودة -->
+    <color name="text_primary">#FFFFFF</color>     <!-- كلام أبيض -->
+    <color name="text_secondary">#B0B0B0</color>   <!-- كلام رمادي فاتح -->
+    <color name="card_background">#1E1E1E</color>  <!-- كروت لونها رمادي غامق -->
+</resources>

@@ -1,0 +1,122 @@
+<resources>
+    <string name="app_name">Homify</string>
+    <string name="app_title">Homify</string>
+    <string name="tagline">Finding your home, stress-free.</string>
+    <string name="loading">LOADING</string>
+    <string name="footer_text">A modern standard for student living.</string>
+    <string name="onboarding_title">Find your perfect\nstudent home easily</string>
+    <string name="onboarding_subtitle">Discover verified listings near your\ncampus with zero stress.</string>
+    <string name="terms_text">By continuing, you agree to our Terms of Service</string>
+    <string name="get_started">Get Started →</string>
+    <string name="login">Login</string>
+    <string name="guest_view">Guest View</string>
+
+    <string name="premium_studios">Premium Studios</string>
+    <string name="location">Central Campus Area</string>
+    <string name="price">$450/mo</string>
+    <!-- Register Screen -->
+    <string name="join_us">Join Us</string>
+    <string name="register_title">Find your perfect home.</string>
+    <string name="register_subtitle">Stress-free housing discovery for students\nand professionals.</string>
+    <string name="first_name_hint">First Name</string>
+    <string name="last_name_hint">Last Name</string>
+    <string name="email_hint">Email Address</string>
+    <string name="national_id_hint">National ID</string>
+    <string name="role_hint">I am a...</string>
+    <string name="tenant">Tenant</string>
+    <string name="landlord">Landlord</string>
+    <string name="password_hint">Password</string>
+    <string name="confirm_password_hint">Confirm Password</string>
+    <string name="agree_terms">I agree to the Terms of Service and Privacy Policy.</string>
+    <string name="create_account">Create Account →</string>
+    <string name="already_have_account">Already have an account? Log In</string>
+    <string name="back_button">Back</string>
+
+    <!-- Labels for Register Form -->
+    <string name="label_first_name">First Name</string>
+    <string name="label_last_name">Last Name</string>
+    <string name="label_email">Email Address</string>
+    <string name="label_national_id">National ID</string>
+    <string name="label_role">I am a...</string>
+    <string name="label_password">Password</string>
+    <string name="label_confirm_password">Confirm Password</string>
+
+    <!-- Validation Errors -->
+    <string name="err_first_name_req">First Name is required!</string>
+    <string name="err_last_name_req">Last Name is required!</string>
+    <string name="err_email_invalid">Please use a valid email</string>
+    <string name="err_nid_req">National ID is required!</string>
+    <string name="err_nid_length">National ID must be 14 digits</string>
+    <string name="err_role_req">User type is required!</string>
+    <string name="err_pass_req">Password is required!</string>
+    <string name="err_confirm_pass_req">Confirm password is required!</string>
+    <string name="err_pass_match">Confirm password must match password</string>
+
+    <!-- Login Screen -->
+    <string name="login_tagline">Find your home away from home.</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="login_btn_text">Login</string>
+    <string name="dont_have_account">Don\'t have an account? Register Now</string>
+    <string name="back_to_register">Back to Register</string>
+
+    <!-- Add Unit Screen -->
+    <string name="add_unit_title">Add New Unit</string>
+    <string name="add_unit_subtitle">Fill in the details to list your property and help students find their next home.</string>
+
+    <string name="section_unit_details">Unit Details</string>
+    <string name="section_specifications">Specifications</string>
+    <string name="section_location">Location</string>
+    <string name="section_media">Media</string>
+
+    <string name="err_field_req">This field is required</string>
+
+    <!-- Categories from Noureen -->
+    <string name="category_all">All</string>
+    <string name="category_near_uni">Near Uni</string>
+    <string name="category_studio">Studio</string>
+    <string name="category_villa">Villa</string>
+    <string name="category_apartment">Apartment</string>
+    <string name="category_shared">Shared Room</string>
+
+    <!-- Labels -->
+    <string name="label_size">Size (m²)</string>
+    <string name="label_amenities">Amenities</string>
+    <string name="label_governorate">Governorate</string>
+    <string name="label_address">Full Address</string>
+    <string name="manage_your_properties_and_tenants_neffortlessly">Manage your properties and tenants\neffortlessly.</string>
+    <string name="total_units">TOTAL UNITS</string>
+    <string name="_12">12</string>
+    <string name="available">AVAILABLE</string>
+    <string name="_2">2</string>
+    <string name="rented">RENTED</string>
+    <string name="_10">10</string>
+    <string name="my_listed_units">My listed units</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="save_unit">Save Unit</string>
+    <string name="location_link">Location link</string>
+    <string name="street_hint">e.g. 124 Maple Street</string>
+    <string name="unit_title">Unit title</string>
+    <string name="description">Description</string>
+    <string name="describe_amenities">Describe the unit, amenities, and nearby landmarks...</string>
+    <string name="price_hint">0.00</string>
+    <string name="size_hint">e.g. 150</string>
+    <string name="beds_hint">1</string>
+    <string name="am_hint">e.g. WiFi, AC, Balcony (Comma separated)</string>
+    <string name="bathrooms">Bathrooms</string>
+    <string name="bedrooms">Bedrooms</string>
+    <string name="unit_title_hint">e.g. Sunny Studio near Downtown</string>
+    <string name="price_label">Price ($)</string>
+    <string name="baths_hint">1</string>
+    <string name="gov_hint">e.g. Cairo</string>
+    <string name="location_hint">Paste Google Maps URL</string>
+    <string name="upload_images">Upload images</string>
+    <string name="drag_and_drop">Drag and drop or click to browse. Up to 10 photos.</string>
+    <string name="cancel">Cancel</string>
+    <string name="log_out">Log out</string>
+    <string name="language">Language</string>
+    <string name="light_mode">Light Mode</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="profile">Profile</string>
+    <string name="home">Home</string>
+    <string name="user_name">Menna Alaa</string>
+</resources>

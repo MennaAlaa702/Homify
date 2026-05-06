@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Homify</string>
+
+    <string name="welcome_hi">Hi!</string>
+    <string name="search_hint">Search by area, uni or street</string>
+    <string name="featured_spots">Featured Spots</string>
+    <string name="available_units">Available Units</string>
+    <string name="see_all">See all</string>
+    <string name="map_view">Map View</string>
+    <string name="top_rated">Top Rated</string>
+    <string name="azure2min">Azure Studios\n2 mins walk</string>
+
+
+    <string name="category_all">All</string>
+    <string name="category_near_uni">Near Uni</string>
+    <string name="category_studio">Studio</string>
+    <string name="category_villa">Villa</string>
+    <string name="category_apartment">Apartment</string>
+    <string name="category_shared">Shared Room</string>
+
+    <string name="placeholder_property_name">The Green House</string>
+    <string name="placeholder_location">Headingley, Leeds</string>
+    <string name="placeholder_price">650ُEGP/mo</string>
+    <string name="amenity_fiber">Fiber</string>
+    <string name="amenity_bike">Bike Storage</string>
+    <string name="Top_rated">Top Rated</string>
+    <string name="price_high_to_low">Price: High to Low</string>
+    <string name="price_low_to_high">Price: Low to High</string>
+    <string name="location_a_z">Location (A-Z)</string>
+
+
+    <string name="log_out">Log Out</string>
+    <string name="username">username</string>
+    <string name="bio">bio</string>
+    <string name="personal_details">Personal Details</string>
+    <string name="account_details">Account Details</string>
+    <string name="email">username@example.com</string>
+    <string name="phoneNumber">+20 123 456 789</string>
+    <string name="nationalid">299010124XXXXX</string>
+    <string name="totalUnits">Total Listed Units: 12</string>
+    <string name="log_outBtn">Log Out</string>
+    <string name="total_units_format">Total Listed Units: %s</string>
+    <string name="property_image_desc">property description</string>
+    <string name="back_button_desc">back arrow\n\n</string>
+    <string name="landlord_image_desc">landlord desc\n\n</string>
+    <string name="landlord_status">landlord status\n\n</string>
+    <string name="landlord_name">landlord name\n</string>
+
+
+    <string name="open_in_maps">Open in maps\n</string>
+    <string name="label_location">label location</string>
+    <string name="label_amenities">label amenities</string>
+    <string name="read_more">read more\n</string>
+    <string name="loading_desc">loadind description</string>
+    <string name="about_unit">about unit</string>
+    <string name="location_text">location text\n</string>
+    <string name="per_month">per month\n</string>
+    <string name="price_val">price value\n</string>
+    <string name="title_urban_nest">unit title</string>
+    <string name="type_apartment">"unit type "</string>
+    <string name="call_landlord">Call Landlord</string>
+    <string name="edit_profile_photo">Edit profile photo</string>
+    <string name="apartment">Apartment</string>
+    <string name="property_name">Property Name</string>
+    <string name="_0_0_egp">0.0 EGP</string>
+    <string name="city_governorate">City, Governorate</string>
+    <string name="about_this_unit">About this unit</string>
+    <string name="loading_description">Loading description...</string>
+    <string name="location">Location</string>
+    <string name="open_inmaps">Open in Maps</string>
+    <string name="landLorD_name">Landlord Name</string>
+    <string name="property_owner">Property Owner</string>
+    <string name="CaLL_landlord">Call Landlord</string>
+    <string name="feature_icon">Feature Icon</string>
+    <string name="_1_bedroom">1 Bedroom</string>
+</resources>

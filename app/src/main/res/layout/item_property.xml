@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.example.homify.PropertyCard xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="22dp"
+    android:layout_marginLeft="20dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="24dp"
+    app:cardElevation="0dp"
+    app:cardPreventCornerOverlap="false"
+    app:strokeWidth="0dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="16dp">
+
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/ivProperty"
+            android:layout_width="match_parent"
+            android:layout_height="280dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/home"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/CardView.Dark"
+            tools:layout_editor_absoluteX="30dp" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/tvPropertyPrice"
+            style="@style/Widget.MaterialComponents.Chip.Action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginBottom="12dp"
+            android:fontFamily="@font/poppins_medium"
+            android:text="@string/placeholder_price"
+            android:textColor="@color/white"
+            app:chipBackgroundColor="@color/primary_blue"
+            app:chipCornerRadius="8dp"
+            app:chipStrokeWidth="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/ivProperty"
+            app:layout_constraintStart_toStartOf="@+id/ivProperty" />
+
+
+        <TextView
+            android:id="@+id/tvPropertyName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            android:fontFamily="@font/poppins_medium"
+            android:text="@string/placeholder_property_name"
+            android:textColor="@color/text_black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ivProperty" />
+
+
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/unitType"
+            style="@style/Widget.MaterialComponents.Chip.Action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="28dp"
+            android:text="@string/category_studio"
+            android:textColor="@color/text_gray_light"
+            android:textSize="12sp"
+            app:chipBackgroundColor="@color/white"
+            app:chipCornerRadius="8dp"
+            app:chipMinHeight="32dp"
+            app:chipStrokeColor="@color/chip_stroke_gray"
+            app:chipStrokeWidth="1dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvPropertyName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.923" />
+
+        <ImageView
+            android:id="@+id/ivLocationIcon"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:src="@drawable/location"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvPropertyName"
+            app:tint="@color/text_gray_dark" />
+
+        <TextView
+            android:id="@+id/tvLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:fontFamily="@font/poppins_medium"
+            android:text="@string/placeholder_location"
+            android:textColor="@color/text_gray_dark"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toBottomOf="@+id/ivLocationIcon"
+            app:layout_constraintStart_toEndOf="@+id/ivLocationIcon"
+            app:layout_constraintTop_toTopOf="@+id/ivLocationIcon" />
+
+
+        <!--(Amenities)-->
+        <LinearLayout
+            android:id="@+id/amenitiescontainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="16dp"
+            android:orientation="horizontal"
+            android:padding="4dp"
+            app:layout_constraintTop_toBottomOf="@+id/tvLocation">
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.example.homify.PropertyCard>

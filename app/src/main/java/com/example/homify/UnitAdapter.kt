@@ -1,6 +1,5 @@
-package com.homify.app.adapters
+package com.example.homify
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,8 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
-import com.homify.app.R
-import com.homify.app.models.Unit
+
 //import com.homify.app.models.UnitStatus
 
 /**
@@ -17,8 +15,8 @@ import com.homify.app.models.Unit
  * Supports delete action per item.
  */
 class UnitAdapter(
-    private val units: MutableList<Unit>,
-    private val onDeleteClick: (Unit, Int) -> Any // غيري كلمة Unit الأخيرة لـ Any
+    private val units: MutableList<Units>,
+    private val onDeleteClick: (Units, Int) -> Any // غيري كلمة Unit الأخيرة لـ Any
 ) : RecyclerView.Adapter<UnitAdapter.UnitViewHolder>() {
 
     inner class UnitViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

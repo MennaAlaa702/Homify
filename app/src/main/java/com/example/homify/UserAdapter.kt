@@ -1,4 +1,4 @@
-package com.homify.app.adapters
+package com.example.homify
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,8 +7,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.homify.app.R
-import com.homify.app.models.User
+
 
 /**
  * RecyclerView Adapter for displaying users in ManageUsersActivity.

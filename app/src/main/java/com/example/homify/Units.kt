@@ -1,9 +1,9 @@
-package com.homify.app.models
+package com.example.homify
 
 /**
  * Data model representing a property unit listing.
  */
-data class Unit(
+data class Units(
     val id: Int,
     val name: String,
     val landlord: String,

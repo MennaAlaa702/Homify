@@ -1,8 +1,7 @@
-package com.homify.app.activities
+package com.example.homify
 
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -11,10 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.homify.app.R
-import com.homify.app.adapters.UnitAdapter
-import com.homify.app.models.Unit
-//import com.homify.app.models.UnitStatus
+
 
 /**
  * ManageUnitsActivity — lists all property units with delete functionality.
@@ -24,7 +20,7 @@ import com.homify.app.models.Unit
 class ManageUnitsActivity : AppCompatActivity() {
 
     private lateinit var adapter: UnitAdapter
-    private lateinit var units: MutableList<Unit>
+    private lateinit var units: MutableList<Units>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +37,7 @@ class ManageUnitsActivity : AppCompatActivity() {
 
         // ── Sample unit data matching design screens ──
         units = mutableListOf(
-            Unit(
+            Units(
                 id = 1,
                 name = "Skyline Modern Studio",
                 landlord = "Sarah Jenkins",
@@ -50,7 +46,7 @@ class ManageUnitsActivity : AppCompatActivity() {
 
                 imageResId = android.R.drawable.ic_menu_gallery
             ),
-            Unit(
+            Units(
                 id = 2,
                 name = "Vintage Shared Suite",
                 landlord = "Marcus Thorne",
@@ -59,7 +55,7 @@ class ManageUnitsActivity : AppCompatActivity() {
 
                 imageResId = android.R.drawable.ic_menu_gallery
             ),
-            Unit(
+            Units(
                 id = 3,
                 name = "Industrial Brick Loft",
                 landlord = "Elena Rodriguez",
@@ -141,7 +137,7 @@ class ManageUnitsActivity : AppCompatActivity() {
     /**
      * Show an AlertDialog to confirm unit deletion before removing.
      */
-    private fun showDeleteUnitDialog(unit: Unit, position: Int) {
+    private fun showDeleteUnitDialog(units: Units, position: Int) {
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.btn_delete))
             .setMessage(getString(R.string.confirm_delete_unit_msg))

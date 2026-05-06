@@ -1,4 +1,4 @@
-package com.homify.app.models
+package com.example.homify
 
 /**
  * Data model representing a platform user (tenant or admin).

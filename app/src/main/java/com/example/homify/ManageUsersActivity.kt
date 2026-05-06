@@ -1,11 +1,10 @@
-package com.homify.app.activities
+package com.example.homify
 
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Menu
-import android.view.MenuItem
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -15,9 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
-import com.homify.app.R
-import com.homify.app.adapters.UserAdapter
-import com.homify.app.models.User
+
 
 /**
  * ManageUsersActivity — lists all platform users with delete functionality.

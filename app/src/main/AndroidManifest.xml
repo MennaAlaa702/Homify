@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -11,6 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Homify">
+
         <activity
             android:name=".AddUnitActivity"
             android:windowSoftInputMode="adjustResize"
@@ -28,19 +31,40 @@
             android:exported="false" />
         <activity
             android:name=".OnboardingActivity"
-            android:exported="false" /> <!-- Splash هي البداية -->
+            android:exported="false" />
+
         <activity
             android:name=".SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity> <!-- MainActivity بعد السبلاتش -->
+        </activity>
+
         <activity
             android:name=".MainActivity"
             android:exported="false" />
+
+        <activity
+            android:name=".DashboardActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+
+        <activity
+
+            android:name=".ManageUsersActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".DashboardActivity"/>
+
+        <activity
+            android:name=".ManageUnitsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+
+            android:parentActivityName=".DashboardActivity"/>
+
     </application>
 
 </manifest>

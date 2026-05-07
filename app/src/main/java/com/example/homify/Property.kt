@@ -1,0 +1,16 @@
+package com.example.homify
+
+data class Property(
+    val title: String,
+    val price: String,
+    val governorate: String,
+    val address: String,
+    val description: String,
+    val imageUrl: Int,
+    val bedrooms: String,
+    val bathrooms: String,
+    val size: String,
+    val type: String,
+    val amenities: List<String>,
+    val locationLink: String
+)

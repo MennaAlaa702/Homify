@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.RecyclerView
  * Supports delete action per item.
  */
 class UserAdapter(
-    private val users: MutableList<User>,
-    private val onDeleteClick: (User, Int) -> Unit
+    private val users: MutableList<Users>,
+    private val onDeleteClick: (Users, Int) -> Unit
 ) : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
     inner class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -60,7 +60,7 @@ class UserAdapter(
     /**
      * Filter users by name and refresh the list.
      */
-    fun filter(query: String, allUsers: List<User>) {
+    fun filter(query: String, allUsers: List<Users>) {
         users.clear()
         if (query.isEmpty()) {
             users.addAll(allUsers)

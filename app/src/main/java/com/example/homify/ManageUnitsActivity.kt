@@ -1,5 +1,6 @@
 package com.example.homify
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.widget.Toast
@@ -29,8 +30,15 @@ class ManageUnitsActivity : AppCompatActivity() {
         // Setup Toolbar
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
-        supportActionBar?.title = getString(R.string.manage_units_title)
+
+// تفعيل سهم الرجوع برمجياً
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+
+// تحديد إيه اللي يحصل لما تدوسي على السهم
+        toolbar.setNavigationOnClickListener {
+            onBackPressedDispatcher.onBackPressed() // هيرجعك للأكتيفيتي اللي قبلها
+        }
 
         // Receive extras from DashboardActivity
         val totalUnitsExtra = intent.getStringExtra("TOTAL_UNITS") ?: "4,210"
@@ -67,6 +75,7 @@ class ManageUnitsActivity : AppCompatActivity() {
         )
 
         // ── RecyclerView Setup ──
+
         val rvUnits: RecyclerView = findViewById(R.id.rv_units)
         // التعديل السليم عشان ميبقاش فيه خط أحمر
         adapter = UnitAdapter(units) { unit, position ->
@@ -80,33 +89,10 @@ class ManageUnitsActivity : AppCompatActivity() {
         // ── Floating Action Button ──
         val fab: FloatingActionButton = findViewById(R.id.fab_add_unit)
         fab.setOnClickListener {
-            Toast.makeText(this, "Add new unit — coming soon", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, AddUnitActivity::class.java)
+            startActivity(intent)
         }
 
-        // ── Bottom Navigation ──
-        val bottomNav: BottomNavigationView = findViewById(R.id.bottomNav)
-        bottomNav.selectedItemId = R.id.nav_home
-        bottomNav.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_home -> {
-                    finish()
-                    true
-                }
-                R.id.nav_search -> {
-                    Toast.makeText(this, getString(R.string.menu_search), Toast.LENGTH_SHORT).show()
-                    true
-                }
-                R.id.nav_saved -> {
-                    Toast.makeText(this, getString(R.string.nav_saved), Toast.LENGTH_SHORT).show()
-                    true
-                }
-                R.id.nav_profile -> {
-                    Toast.makeText(this, getString(R.string.nav_profile), Toast.LENGTH_SHORT).show()
-                    true
-                }
-                else -> false
-            }
-        }
     }
 
     /**

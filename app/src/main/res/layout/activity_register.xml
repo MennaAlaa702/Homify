@@ -298,7 +298,46 @@
             app:layout_constraintTop_toBottomOf="@id/spinner_role"
             app:layout_constraintStart_toStartOf="@id/spinner_role"
             app:layout_constraintEnd_toEndOf="@id/spinner_role" />
+        <TextView
+            android:id="@+id/tv_label_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/phone_number"
+            android:textSize="12sp"
+            android:textColor="@color/text_primary"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintTop_toBottomOf="@id/tv_error_role"
+            app:layout_constraintStart_toStartOf="@id/v_form_bg" />
 
+        <EditText
+            android:id="@+id/et_phone"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:hint="@string/phone_hint"
+            android:inputType="phone"
+            android:maxLength="11"
+            android:background="@drawable/bg_input_field"
+            android:paddingHorizontal="16dp"
+            android:textColor="@color/text_primary"
+            android:textSize="14sp"
+            android:layout_marginTop="6dp"
+            android:layout_marginHorizontal="16dp"
+            app:layout_constraintTop_toBottomOf="@id/tv_label_phone"
+            app:layout_constraintStart_toStartOf="@id/v_form_bg"
+            app:layout_constraintEnd_toEndOf="@id/v_form_bg" />
+
+        <TextView
+            android:id="@+id/tv_error_phone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="#D32F2F"
+            android:textSize="11sp"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/et_phone"
+            app:layout_constraintStart_toStartOf="@id/et_phone"
+            app:layout_constraintEnd_toEndOf="@id/et_phone" />
         <!-- 5. Password -->
         <TextView
             android:id="@+id/tv_label_password"
@@ -310,7 +349,7 @@
             android:textStyle="bold"
             android:layout_marginTop="16dp"
             android:layout_marginStart="16dp"
-            app:layout_constraintTop_toBottomOf="@id/tv_error_role"
+            app:layout_constraintTop_toBottomOf="@id/tv_error_phone"
             app:layout_constraintStart_toStartOf="@id/v_form_bg" />
 
         <EditText

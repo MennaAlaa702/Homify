@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -15,20 +15,31 @@
         android:theme="@style/Theme.Homify">
 
         <activity
-            android:name=".AddUnitActivity"
-            android:windowSoftInputMode="adjustResize"
+            android:name=".TenantHome"
             android:exported="false" />
+        <activity
+            android:name=".PropertyDetailsActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Homify" />
+        <activity
+            android:name=".AddUnitActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".LandlordHomeActivity"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".RegisterActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".OnboardingActivity"
             android:exported="false" />
@@ -45,25 +56,20 @@
         <activity
             android:name=".MainActivity"
             android:exported="false" />
-
         <activity
             android:name=".DashboardActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
-
+            android:screenOrientation="portrait" />
         <activity
-
             android:name=".ManageUsersActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".DashboardActivity"/>
-
+            android:parentActivityName=".DashboardActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ManageUnitsActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
-
-            android:parentActivityName=".DashboardActivity"/>
+            android:parentActivityName=".DashboardActivity"
+            android:screenOrientation="portrait" />
 
     </application>
 

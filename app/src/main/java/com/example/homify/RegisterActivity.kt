@@ -30,6 +30,9 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var tvErrorPassword: TextView
     private lateinit var tvErrorConfirmPassword: TextView
 
+    private lateinit var etPhone: EditText
+    private lateinit var tvErrorPhone: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
@@ -57,13 +60,23 @@ class RegisterActivity : AppCompatActivity() {
 // 5. زرار التسجيل وعملية الـ Validation
         findViewById<Button>(R.id.btn_register).setOnClickListener {
             if (validateForm()) {
+                val selectedRole = spinnerRole.selectedItem.toString()
+// 2. احفظي الـ Role في الـ SharedPreferences (ده الكود اللي سألتي عليه)
+                val sharedPref = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+                val editor = sharedPref.edit()
+                editor.putString("role", selectedRole)
+                editor.apply()
+                // التوجيه بناءً على نوع الحساب
+                val intent = if (selectedRole.equals("Tenant", ignoreCase = true)) {
+                    Intent(this, TenantHome::class.java)
+                } else {
+                    // لو مختار Landlord أو أي حاجة تانية
+                    Intent(this, LandlordHomeActivity::class.java)
+                }
 
-                // التعديل هنا: غيرنا الـ MainActivity لـ LandlordHomeActivity
-                val intent = Intent(this, LandlordHomeActivity::class.java)
                 startActivity(intent)
-
-                Toast.makeText(this, "Registration Successful!", Toast.LENGTH_SHORT).show()
                 finish()
+
             }
         }
 
@@ -83,6 +96,7 @@ class RegisterActivity : AppCompatActivity() {
         etEmail = findViewById(R.id.et_email)
         etNationalId = findViewById(R.id.et_national_id)
         etPassword = findViewById(R.id.et_password)
+        etPhone = findViewById(R.id.et_phone)
         etConfirmPassword = findViewById(R.id.et_confirm_password)
         spinnerRole = findViewById(R.id.spinner_role)
         cbTerms = findViewById(R.id.cb_terms)
@@ -93,6 +107,7 @@ class RegisterActivity : AppCompatActivity() {
         tvErrorEmail = findViewById(R.id.tv_error_email)
         tvErrorNationalId = findViewById(R.id.tv_error_national_id)
         tvErrorRole = findViewById(R.id.tv_error_role)
+        tvErrorPhone = findViewById(R.id.tv_error_phone)
         tvErrorPassword = findViewById(R.id.tv_error_password)
         tvErrorConfirmPassword = findViewById(R.id.tv_error_confirm_password)
     }
@@ -139,6 +154,20 @@ class RegisterActivity : AppCompatActivity() {
             tvErrorRole.text = getString(R.string.err_role_req)
             tvErrorRole.visibility = View.VISIBLE
             isValid = false
+        }
+
+        // جوه دالة الفاليديشن بتاعتك، ضيفي البلوك ده:
+        val phone = etPhone.text.toString().trim()
+        if (phone.isEmpty()) {
+            tvErrorPhone.text = getString(R.string.err_role_req)
+            tvErrorPhone.visibility = android.view.View.VISIBLE
+            isValid = false
+        } else if (phone.length != 11) {
+            tvErrorPhone.text = "Phone number must be exactly 11 digits"
+            tvErrorPhone.visibility = android.view.View.VISIBLE
+            isValid = false
+        } else {
+            tvErrorPhone.visibility = android.view.View.GONE
         }
 
         // 6. Password Validation

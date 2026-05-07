@@ -1,5 +1,6 @@
 package com.example.homify
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -9,22 +10,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.appcompat.app.AppCompatDelegate
-
 
 class SideMenuFragment : DialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // بنربط ملف التصميم
         return inflater.inflate(R.layout.fragment_side_menu, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // تعريف الزراير
         val menuHome = view.findViewById<TextView>(R.id.menu_home)
         val menuProfile = view.findViewById<TextView>(R.id.menu_profile)
         val menuDarkMode = view.findViewById<TextView>(R.id.menu_dark_mode)
@@ -32,15 +29,27 @@ class SideMenuFragment : DialogFragment() {
         val menuLanguage = view.findViewById<TextView>(R.id.menu_language)
         val menuLogout = view.findViewById<TextView>(R.id.menu_logout)
 
-        // برمجة الزراير (كل زرار بيعمل حاجة)
+        // 1. برمجة زرار الـ Home بناءً على الـ Role
         menuHome.setOnClickListener {
-            // بما إننا في الـ Home أصلاً هنقفل القائمة بس
+            val sharedPref = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+            val role = sharedPref.getString("role", "Tenant") // بيفترض إنه Tenant لو ملهاش قيمة
+
+            val intent = if (role.equals("Landlord", ignoreCase = true)) {
+                Intent(requireContext(), LandlordHomeActivity::class.java)
+            } else {
+                Intent(requireContext(), TenantHome::class.java)
+            }
+
+            // بننضف الـ Stack عشان ميبقاش في كذا نسخة من الـ Home مفتوحة
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
             dismiss()
         }
 
+        // 2. برمجة زرار الـ Profile
         menuProfile.setOnClickListener {
-            // startActivity(Intent(requireContext(), ProfileActivity::class.java))
-            Toast.makeText(context, "Profile Clicked", Toast.LENGTH_SHORT).show()
+            val intent = Intent(requireContext(), ProfileActivity::class.java)
+            startActivity(intent)
             dismiss()
         }
 
@@ -55,34 +64,30 @@ class SideMenuFragment : DialogFragment() {
         }
 
         menuLanguage.setOnClickListener {
-            Toast.makeText(context, "Change Language Clicked", Toast.LENGTH_SHORT).show()
+            // هنا ممكن نبرمج تغيير اللغة لاحقاً
             dismiss()
         }
 
+        // 3. برمجة زرار الـ Logout (بيودي لـ Onboarding)
         menuLogout.setOnClickListener {
-            // بيقفل الشاشة دي ويفتح شاشة اللوجين
-            val intent = Intent(requireContext(), LoginActivity::class.java)
+            val intent = Intent(requireContext(), OnboardingActivity::class.java)
+            // نستخدم Flags عشان اليوزر ميعرفش يعمل Back للـ Home بعد ما خرج
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
             dismiss()
         }
     }
 
-    // الدالة دي هي اللي بتظبط المقاس وتخليه يظهر من الجنب مش في النص
     override fun onStart() {
         super.onStart()
         val window = dialog?.window
         if (window != null) {
-            // بنخلي العرض ياخد 75% من الشاشة، والطول الشاشة كلها
             val width = (resources.displayMetrics.widthPixels * 0.75).toInt()
             window.setLayout(width, ViewGroup.LayoutParams.MATCH_PARENT)
-
-            // بنخلي القائمة تظهر من اليمين (عشان أيقونة المنيو عندك في اليمين)
             window.setGravity(Gravity.END)
 
-            // خلفية شفافة عشان حواف القائمة تبان مظبوطة
-            window.setBackgroundDrawable(ColorDrawable(Color.WHITE))
+            // تعديل مهم: بنستخدم اللون الذكي بتاع الكروت عشان المنيو متبقاش بيضا في الدارك مود
+            window.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.card_background, null)))
         }
     }
-
 }

@@ -1,5 +1,6 @@
 package com.example.homify
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -41,13 +42,29 @@ class LoginActivity : AppCompatActivity() {
             finish()
         }
 
-        // 4. زرار اللوجين وعملية الـ Validation
+        // 4. زرار اللوجين وعملية الـ Validation والتوجيه الذكي
         btnLogin.setOnClickListener {
             if (validateForm()) {
-                // لو الـ Validation نجح، نروح للـ Main
-                val intent = Intent(this, MainActivity::class.java)
+                val email = etEmail.text.toString().trim()
+
+                // بنقرأ الـ Role اللي اتسجل في الـ SharedPreferences
+                val sharedPref = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+                var userRole = sharedPref.getString("role", "Tenant") // بيفترض إنه Tenant لو ملقاش حاجة
+
+                // خدعة عشان ندخل كـ Admin (لأن مفيش أدمن في شاشة التسجيل)
+                if (email.equals("admin@gmail.com", ignoreCase = true)) {
+                    userRole = "Admin"
+                }
+
+                // التوجيه بناءً على الرول
+                val intent = when {
+                    userRole.equals("Admin", ignoreCase = true) -> Intent(this, DashboardActivity::class.java)
+                    userRole.equals("Landlord", ignoreCase = true) -> Intent(this, LandlordHomeActivity::class.java)
+                    else -> Intent(this, TenantHome::class.java)
+                }
+
                 startActivity(intent)
-                Toast.makeText(this, "Login Successful!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Welcome back!", Toast.LENGTH_SHORT).show()
                 finish()
             }
         }

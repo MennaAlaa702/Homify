@@ -1,6 +1,7 @@
 package com.example.homify
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -24,18 +25,24 @@ import com.google.android.material.button.MaterialButton
 class ManageUsersActivity : AppCompatActivity() {
 
     private lateinit var adapter: UserAdapter
-    private lateinit var allUsers: MutableList<User>
+    private lateinit var allUsers: MutableList<Users>
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_manage_users)
 
-        // Setup Toolbar
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
-        supportActionBar?.title = getString(R.string.manage_users_title)
+
+// تفعيل سهم الرجوع
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+
+// برمجة زرار السهم
+        toolbar.setNavigationOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
 
         // Receive extras from DashboardActivity (Explicit Intent data)
         val totalUsers = intent.getStringExtra("TOTAL_USERS") ?: "2,842"
@@ -43,10 +50,10 @@ class ManageUsersActivity : AppCompatActivity() {
 
         // ── Sample user data ──
         allUsers = mutableListOf(
-            User(1, "Sarah Miller",  "sarah.m@university.edu",  android.R.drawable.ic_menu_myplaces),
-            User(2, "Marcus Chen",   "m.chen@homify.app",        android.R.drawable.ic_menu_myplaces),
-            User(3, "Leila Ahmed",   "leila.ahmed@campus.com",   android.R.drawable.ic_menu_myplaces),
-            User(4, "James O'Neill", "j.oneill@housing.org",     android.R.drawable.ic_menu_myplaces)
+            Users(1, "Sarah Miller",  "sarah.m@university.edu",  android.R.drawable.ic_menu_myplaces),
+            Users(2, "Marcus Chen",   "m.chen@homify.app",        android.R.drawable.ic_menu_myplaces),
+            Users(3, "Leila Ahmed",   "leila.ahmed@campus.com",   android.R.drawable.ic_menu_myplaces),
+            Users(4, "James O'Neill", "j.oneill@housing.org",     android.R.drawable.ic_menu_myplaces)
         )
 
         // ── RecyclerView Setup ──
@@ -70,43 +77,22 @@ class ManageUsersActivity : AppCompatActivity() {
         // ── Add New User Button ──
         val btnAddUser: MaterialButton = findViewById(R.id.btn_add_new_user)
         btnAddUser.setOnClickListener {
-            // In a real app this would open an Add User form/dialog
-            Toast.makeText(this, getString(R.string.toast_user_added), Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
         }
 
-        // ── Bottom Navigation ──
-        val bottomNav: BottomNavigationView = findViewById(R.id.bottomNav)
-        bottomNav.selectedItemId = R.id.nav_profile
-        bottomNav.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_home -> {
-                    finish() // return to Dashboard
-                    true
-                }
-                R.id.nav_search -> {
-                    Toast.makeText(this, getString(R.string.menu_search), Toast.LENGTH_SHORT).show()
-                    true
-                }
-                R.id.nav_saved -> {
-                    Toast.makeText(this, getString(R.string.nav_saved), Toast.LENGTH_SHORT).show()
-                    true
-                }
-                R.id.nav_profile -> true
-                else -> false
-            }
-        }
     }
 
     /**
      * Show an AlertDialog to confirm user deletion before removing.
      */
-    private fun showDeleteUserDialog(user: User, position: Int) {
+    private fun showDeleteUserDialog(users: Users, position: Int) {
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.btn_delete))
             .setMessage(getString(R.string.confirm_delete_user_msg))
             .setPositiveButton(getString(R.string.btn_confirm)) { dialog, _ ->
                 adapter.removeUser(position)
-                allUsers.remove(user)
+                allUsers.remove(users)
                 Toast.makeText(this, getString(R.string.toast_user_deleted), Toast.LENGTH_SHORT).show()
                 dialog.dismiss()
             }

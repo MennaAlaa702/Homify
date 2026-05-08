@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="screen_background">#121212</color>
+    <color name="background_light">#121212</color>
+    <color name="background_white">#1E1E1E</color>
+    <color name="background_beige">#121212</color>
+    <color name="background_Beige">#121212</color>
+    <color name="card_background">#1E1E1E</color>
+    <color name="search_bar_bg">#2C2C2C</color>
+    <color name="map_view_bg">#1A2228</color>
+
+    <color name="text_primary">#F5F5F5</color>
+    <color name="text_secondary">#B3B3B3</color>
+    <color name="text_black">#FFFFFF</color>
+    <color name="text_gray_dark">#B3B3B3</color>
+    <color name="text_gray_light">#757575</color>
+    <color name="text_hint">#9E9E9E</color>
+    <color name="_text_black_primary">#FFFFFF</color>
+    <color name="_text_gray_hint">#A0A0A0</color>
+    <color name="text_black_primary">#FFFFFF</color>
+    <color name="text_black_primary_fs">#FFFFFF</color>
+
+    <color name="primary_blue">#4A90D9</color>
+    <color name="primary_blue_light">#6BA5E8</color>
+    <color name="accent_blue">#82B5F0</color>
+    <color name="growth_target_card">#1A324A</color> <color name="primary_blue_tp">#4A90D9</color>
+    <color name="ic_fiter_color">#4A90D9</color>
+
+    <color name="green_growth">#4CAF50</color>
+    <color name="orange_urgent">#FFB74D</color>
+
+    <color name="status_active_bg">#0D2914</color>
+    <color name="status_active_text">#66BB6A</color>
+
+    <color name="status_pending_bg">#332700</color>
+    <color name="status_pending_text">#FFCA28</color>
+
+    <color name="status_urgent_bg">#330E0E</color>
+    <color name="status_urgent_text">#EF5350</color>
+
+    <color name="status_draft_bg">#091A2F</color>
+    <color name="status_draft_text">#64B5F6</color>
+
+    <color name="divider_color">#333333</color>
+    <color name="icon_tint_blue">#6BA5E8</color>
+    <color name="delete_red">#EF5350</color>
+    <color name="progress_bg">#424242</color>
+    <color name="nav_selected">#6BA5E8</color>
+    <color name="nav_unselected">#757575</color>
+    <color name="chip_stroke_gray">#424242</color>
+    <color name="redLogOut">#EF5350</color>
+    <color name="redlogOutStroke">#EF5350</color>
+
+    <color name="developColor">#8CA8C4</color>
+    <color name="phonecolor">#6BA5E8</color>
+    <color name="nIcolor">#6BA5E8</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="transparent">#00000000</color>
+
+</resources>

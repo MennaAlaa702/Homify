@@ -11,11 +11,27 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import data.AppDatabase
+import data.viewmodel.UserViewModel
+import data.viewmodel.UnitViewModel
+import data.viewmodel.ViewModelFactory
 import java.io.File
 import java.io.FileOutputStream
 
 class ProfileActivity : AppCompatActivity() {
+
+    private lateinit var userViewModel: UserViewModel
+    private lateinit var unitViewModel: UnitViewModel
+
+    // تعريف الـ Views كـ Global عشان نستخدمهم في الـ observation
+    private lateinit var tvFullName: TextView
+    private lateinit var tvEmail: TextView
+    private lateinit var tvPhone: TextView
+    private lateinit var tvNationalId: TextView
+    private lateinit var tvTotalUnits: TextView
+    private lateinit var layoutLandlordOnly: ConstraintLayout
 
     private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
@@ -28,72 +44,102 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // 1. إعداد الثيم وشاشة البداية أول حاجة
-        val splashScreen = installSplashScreen()
+        // 1. إعداد الثيم وشاشة البداية
+        //val splashScreen = installSplashScreen()
         setTheme(R.style.Theme_Homify)
         super.onCreate(savedInstanceState)
-
-        // 2. أهم سطر: رسم الشاشة قبل ما نربط أي عنصر
         setContentView(R.layout.activity_profile)
 
-// 1. تعريف زرار المنيو
-        val btnOpenMenu: ImageButton = findViewById(R.id.btn_open_menu)
+        // 2. تعريف العناصر (Initialize Views)
+        initializeViews()
 
-// 2. عند الضغط عليه يظهر الفريجمنت
-        btnOpenMenu.setOnClickListener {
+        // 3. إعداد الـ ViewModels
+        val database = AppDatabase.getDatabase(this)
+        val factory = ViewModelFactory(
+            application = application,
+            userDao = database.userDao(),
+            unitDao = database.unitDao(),
+            profileDao = database.profileDao()
+        )
+        userViewModel = ViewModelProvider(this, factory).get(UserViewModel::class.java)
+        unitViewModel = ViewModelProvider(this, factory).get(UnitViewModel::class.java)
+
+        // 4. جلب الـ ID ومراقبة البيانات
+        val sharedPref = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        val userId = sharedPref.getInt("userId", -1)
+
+        if (userId != -1) {
+            setupObservers(userId)
+        }
+
+        // 5. برمجة الأزرار (Buttons Logic)
+        setupButtons(sharedPref)
+
+        // تحميل الصورة
+        loadImageFromPrefs()
+    }
+
+    private fun initializeViews() {
+        tvFullName = findViewById(R.id.tvFullName)
+        tvEmail = findViewById(R.id.tvEmail)
+        tvPhone = findViewById(R.id.tvPhone)
+        tvNationalId = findViewById(R.id.tvNationalId)
+        tvTotalUnits = findViewById(R.id.tvTotalUnits)
+        layoutLandlordOnly = findViewById(R.id.layoutLandlordOnly)
+    }
+
+    private fun setupObservers(userId: Int) {
+        // مراقبة بيانات المستخدم الأساسية
+        userViewModel.getUserData(userId).observe(this) { user ->
+            user?.let {
+                tvFullName.text = "${it.firstName} ${it.lastName}"
+                tvEmail.text = it.email
+
+                // التحقق من الـ Role (بناءً على الـ Enum اللي عندك)
+                if (it.role.name.equals("landlord", ignoreCase = true)) {
+                    layoutLandlordOnly.visibility = View.VISIBLE
+                    updateUnitsCount(it.userId)
+                } else {
+                    layoutLandlordOnly.visibility = View.GONE
+                }
+            }
+        }
+
+        // مراقبة بروفايل المستأجر (Phone, National ID)
+        userViewModel.getTenantProfile(userId).observe(this) { profile ->
+            profile?.let {
+                tvPhone.text = it.phoneNumber
+                tvNationalId.text = it.nationalId
+            }
+        }
+    }
+
+    private fun updateUnitsCount(landlordId: Int) {
+        unitViewModel.getUnitCount(landlordId).observe(this) { count ->
+            tvTotalUnits.text = "Total Units: $count"
+        }
+    }
+
+    private fun setupButtons(sharedPref: android.content.SharedPreferences) {
+        // زرار المنيو الجانبي
+        findViewById<ImageButton>(R.id.btn_open_menu).setOnClickListener {
             val sideMenu = SideMenuFragment()
             sideMenu.show(supportFragmentManager, "SideMenu")
         }
 
-        // باقي عناصر الشاشة الأساسية
-        val tvFullName = findViewById<TextView>(R.id.tvFullName)
-        val tvEmail = findViewById<TextView>(R.id.tvEmail)
-        val tvPhone = findViewById<TextView>(R.id.tvPhone)
-        val tvNationalId = findViewById<TextView>(R.id.tvNationalId)
-        val tvTotalUnits = findViewById<TextView>(R.id.tvTotalUnits)
+        // زرار الرجوع
+//        findViewById<ImageButton>(R.id.btnBack).setOnClickListener {
+//            finish()
+//        }
 
-        // استخدام الأنواع الصحيحة المتوافقة مع الـ XML المسطح الجديد
-        val layoutLandlordOnly = findViewById<ConstraintLayout>(R.id.layoutLandlordOnly)
-        val logoutButton = findViewById<Button>(R.id.btnLogout)
-        val btnEditPhoto = findViewById<FloatingActionButton>(R.id.fabEditPhoto)
-
-        // =========================================================
-        // 4. قراءة البيانات من الذاكرة (SharedPreferences)
-        // =========================================================
-        val sharedPref = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-
-        tvFullName.text = sharedPref.getString("username", "User Name")
-        tvEmail.text = sharedPref.getString("email", "email@example.com")
-        tvPhone.text = sharedPref.getString("phone", "Not Provided")
-        tvNationalId.text = sharedPref.getString("nationalId", "00000000000000")
-
-        val userRole = sharedPref.getString("role", "tenant") // القيمة الافتراضية
-        val unitsCount = sharedPref.getString("unitsCount", "0")
-
-        // إظهار أو إخفاء قسم الـ Landlord بناءً على نوع المستخدم
-        if (userRole.equals("landlord", ignoreCase = true)) {
-            layoutLandlordOnly.visibility = View.VISIBLE
-            tvTotalUnits.text = "Total Units: $unitsCount"
-        } else {
-            layoutLandlordOnly.visibility = View.GONE
-        }
-
-        // تحميل صورة البروفايل لو موجودة
-        loadImageFromPrefs()
-
-        // =========================================================
-        // 5. برمجة الأزرار
-        // =========================================================
-
-        btnEditPhoto.setOnClickListener {
+        // تغيير الصورة
+        findViewById<FloatingActionButton>(R.id.fabEditPhoto).setOnClickListener {
             pickImageLauncher.launch("image/*")
         }
 
-        logoutButton.setOnClickListener {
-            // مسح بيانات الدخول
+        // تسجيل الخروج
+        findViewById<Button>(R.id.btnLogout).setOnClickListener {
             sharedPref.edit().clear().apply()
-
-            // التوجيه لشاشة البداية
             val intent = Intent(this, OnboardingActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
@@ -137,7 +183,6 @@ class ProfileActivity : AppCompatActivity() {
                 ivProfileImage.setImageResource(R.drawable.ic_default_profile)
             }
         } else {
-            // لو مفيش صورة محفوظة، اعرض الديفولت
             ivProfileImage.setImageResource(R.drawable.ic_default_profile)
         }
     }

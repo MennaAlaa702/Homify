@@ -16,6 +16,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import com.google.android.material.card.MaterialCardView
+import androidx.activity.viewModels
+import data.viewmodel.UnitViewModel
+import data.viewmodel.ViewModelFactory
 
 class TenantHome : AppCompatActivity() {
 
@@ -53,56 +56,34 @@ class TenantHome : AppCompatActivity() {
             showFilterOptions()
         }
 
-        fullList = listOf(
-            Property(
-                "The Green House",
-                "650",
-                "Leeds",
-                "Headingley, St 5",
-                "A cozy studio near the university with all amenities included.",
-                R.drawable.home3,
-                "1", "1", "50",
-                "Studio",
-                listOf("Gym", "Parking"),
-                "https://maps.google.com/?q=53.8197,-1.5776"
-            ),
-            Property(
-                "Urban Nest Apartment",
-                "1200",
-                "Cairo",
-                "Maadi, Road 9",
-                "Modern apartment with a great view and balcony.",
-                R.drawable.home2,
-                "2", "1", "110",
-                "Apartment",
-                listOf("WiFi", "Garden"),
-                "https://maps.google.com/?q=29.9602,31.2569"
-            ),
-            Property(
-                "Luxury Villa",
-                "5000",
-                "New Cairo",
-                "90th Street, Villa 12",
-                "Large villa with a private garden and swimming pool.",
-                R.drawable.home,
-                "4", "3", "350",
-                "Villa",
-                listOf("Pool", "Garden", "Parking"),
-                "https://maps.google.com/?q=30.0074,31.4913"
-            ),
-            Property(
-                "Shared Student Room",
-                "300",
-                "Alexandria",
-                "Sidi Gaber, Nile St",
-                "Affordable shared room for students, close to the library.",
-                R.drawable.kitchen,
-                "1", "1", "20",
-                "Shared Room",
-                listOf("WiFi", "Laundry"),
-                "https://maps.google.com/?q=31.2201,29.9426"
-            )
+        // ── DB: جلب كل الوحدات ──
+        val db = (application as HomifyApp).database
+        val factory = ViewModelFactory(
+            application = application,
+            unitDao = db.unitDao()
         )
+        val unitViewModel: UnitViewModel by viewModels { factory }
+
+        unitViewModel.allUnitsLatest.observe(this) { units ->
+            fullList = units.map { unit ->
+                Property(
+                    id           = unit.id,
+                    title        = unit.title,
+                    price        = unit.price.toInt().toString(),
+                    governorate  = unit.governorate,
+                    address      = unit.address,
+                    description  = unit.description,
+                    imageUrl     = R.drawable.home,
+                    bedrooms     = unit.bedrooms.toString(),
+                    bathrooms    = unit.bathrooms.toString(),
+                    size         = unit.size.toString(),
+                    type         = unit.unitType.name,
+                    amenities    = unit.amenities.split(",").map { it.trim() },
+                    locationLink = unit.locationLink
+                )
+            }
+            propertyAdapter.updateData(fullList)
+        }
 
         propertyAdapter = PropertyAdapter(fullList)
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -117,6 +98,8 @@ class TenantHome : AppCompatActivity() {
         })
 
         setupChips()
+
+        // كود الdb
     }
 
     private fun fetchUserNameFromSource(): String {

@@ -10,6 +10,10 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import com.google.android.material.button.MaterialButton
+import android.widget.TextView
+import androidx.activity.viewModels
+import data.viewmodel.AdminViewModel
+import data.viewmodel.ViewModelFactory
 
 /**
  * DashboardActivity — the main entry screen for Admin.
@@ -39,6 +43,29 @@ class DashboardActivity : AppCompatActivity() {
             val intent = Intent(this, ManageUnitsActivity::class.java)
             startActivity(intent)
         }
+        //اكواد ال db
+        // ── DB: ربط الأرقام الحقيقية ──
+        val db = (application as HomifyApp).database
+
+        val factory = ViewModelFactory(
+            application = application,
+            userDao = db.userDao(),
+            unitDao = db.unitDao()
+        )
+        val adminViewModel: AdminViewModel by viewModels { factory }
+
+        val tvUsers     = findViewById<TextView>(R.id.tv_users_value)
+        val tvTenants   = findViewById<TextView>(R.id.tv_tenants_value)
+        val tvLandlords = findViewById<TextView>(R.id.tv_landlords_value)
+        val tvUnits     = findViewById<TextView>(R.id.tv_units_value)
+
+        adminViewModel.getSystemStats().observe(this) { stats ->
+            tvUsers.text     = stats["totalUsers"].toString()
+            tvTenants.text   = stats["totalTenants"].toString()
+            tvLandlords.text = stats["totalLandlords"].toString()
+            tvUnits.text     = stats["totalUnits"].toString()
+        }
+
     } // <--- القوس ده اللي كان ناقص ومطير الكود كله!
 
 

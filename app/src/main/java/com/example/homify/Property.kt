@@ -1,6 +1,7 @@
 package com.example.homify
 
 data class Property(
+    val id: Int = 0,
     val title: String,
     val price: String,
     val governorate: String,

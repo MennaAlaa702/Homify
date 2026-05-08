@@ -85,6 +85,7 @@ class PropertyAdapter(private var propertyList: List<Property>) :
                 putExtra("SIZE", property.size)
                 putExtra("UNIT_TYPE", property.type)
                 putExtra("MAP_LINK", property.locationLink)
+                putExtra("UNIT_ID", property.id)
                 putStringArrayListExtra("AMENITIES", ArrayList(property.amenities))
             }
             context.startActivity(intent)

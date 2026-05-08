@@ -11,8 +11,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-
-
+import androidx.activity.viewModels
+import data.viewmodel.AdminViewModel
+import data.viewmodel.ViewModelFactory
+import androidx.lifecycle.ViewModelProvider
 /**
  * ManageUnitsActivity — lists all property units with delete functionality.
  * Receives data from DashboardActivity via Intent extras.
@@ -21,7 +23,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 class ManageUnitsActivity : AppCompatActivity() {
 
     private lateinit var adapter: UnitAdapter
-    private lateinit var units: MutableList<Units>
+    private var units: MutableList<Units> = mutableListOf()
+
+    private lateinit var adminViewModel: AdminViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,47 +48,41 @@ class ManageUnitsActivity : AppCompatActivity() {
         val totalUnitsExtra = intent.getStringExtra("TOTAL_UNITS") ?: "4,210"
 
         // ── Sample unit data matching design screens ──
-        units = mutableListOf(
-            Units(
-                id = 1,
-                name = "Skyline Modern Studio",
-                landlord = "Sarah Jenkins",
-                details = "Central District • 450 sqft • Fully Furnished",
-                price = "$1,200/mo",
-
-                imageResId = android.R.drawable.ic_menu_gallery
-            ),
-            Units(
-                id = 2,
-                name = "Vintage Shared Suite",
-                landlord = "Marcus Thorne",
-                details = "North University Area • Shared Bath • Utilities Inc.",
-                price = "$850/mo",
-
-                imageResId = android.R.drawable.ic_menu_gallery
-            ),
-            Units(
-                id = 3,
-                name = "Industrial Brick Loft",
-                landlord = "Elena Rodriguez",
-                details = "Downtown Arts District • 2 Bed • 2 Bath",
-                price = "$2,450/mo",
-
-                imageResId = android.R.drawable.ic_menu_gallery
-            )
+        // ── DB: جلب كل الوحدات ──
+        // ── DB ──
+        val db = (application as HomifyApp).database
+        val factory = ViewModelFactory(
+            application = application,
+            userDao = db.userDao(),
+            unitDao = db.unitDao()
         )
+        adminViewModel = ViewModelProvider(this, factory).get(AdminViewModel::class.java)
 
-        // ── RecyclerView Setup ──
-
+// ── RecyclerView Setup ── (بـ list فاضية في الأول)
         val rvUnits: RecyclerView = findViewById(R.id.rv_units)
-        // التعديل السليم عشان ميبقاش فيه خط أحمر
-        adapter = UnitAdapter(units) { unit, position ->
+        adapter = UnitAdapter(units) { unit, position ->  // ← units مش mutableListOf()
             showDeleteUnitDialog(unit, position)
-            true // الـ true دي هي اللي بتقفل الـ Lambda صح بدل "الحل السحري"
+            true
         }
-
         rvUnits.layoutManager = LinearLayoutManager(this)
         rvUnits.adapter = adapter
+
+// ── observe مرة واحدة بس ──
+        adminViewModel.allUnits.observe(this) { unitList ->
+            units.clear()
+            units.addAll(unitList.map { unit ->
+                Units(
+                    id       = unit.id,
+                    name     = unit.title,
+                    landlord = "Landlord #${unit.landlordId}",
+                    details  = "${unit.governorate} • ${unit.size} m² • ${unit.unitType.name}",
+                    price    = "${unit.price.toInt()} EGP/mo"
+                )
+            })
+            adapter.notifyDataSetChanged()
+        }
+//        rvUnits.layoutManager = LinearLayoutManager(this)
+//        rvUnits.adapter = adapter
 
         // ── Floating Action Button ──
         val fab: FloatingActionButton = findViewById(R.id.fab_add_unit)
@@ -93,6 +91,7 @@ class ManageUnitsActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        // كود الdb
     }
 
     /**
@@ -123,13 +122,12 @@ class ManageUnitsActivity : AppCompatActivity() {
     /**
      * Show an AlertDialog to confirm unit deletion before removing.
      */
-    private fun showDeleteUnitDialog(units: Units, position: Int) {
+    private fun showDeleteUnitDialog(unit: Units, position: Int) {
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.btn_delete))
             .setMessage(getString(R.string.confirm_delete_unit_msg))
             .setPositiveButton(getString(R.string.btn_confirm)) { dialog, _ ->
-                // السطر ده هو اللي بيمسح فعلياً
-                adapter.removeUnit(position)
+                adminViewModel.removeUnitById(unit.id)
                 Toast.makeText(this, getString(R.string.toast_unit_deleted), Toast.LENGTH_SHORT).show()
                 dialog.dismiss()
             }

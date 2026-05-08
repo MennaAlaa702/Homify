@@ -15,6 +15,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
+import androidx.activity.viewModels
+import data.viewmodel.AdminViewModel
+import data.viewmodel.ViewModelFactory
+import data.entities.UserRole
+import androidx.lifecycle.ViewModelProvider
 
 
 /**
@@ -25,8 +30,9 @@ import com.google.android.material.button.MaterialButton
 class ManageUsersActivity : AppCompatActivity() {
 
     private lateinit var adapter: UserAdapter
-    private lateinit var allUsers: MutableList<Users>
+    private var allUsers: MutableList<Users> = mutableListOf()
 
+    private lateinit var adminViewModel: AdminViewModel
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,12 +55,27 @@ class ManageUsersActivity : AppCompatActivity() {
         val growth = intent.getStringExtra("GROWTH") ?: "+12%"
 
         // ── Sample user data ──
-        allUsers = mutableListOf(
-            Users(1, "Sarah Miller",  "sarah.m@university.edu",  android.R.drawable.ic_menu_myplaces),
-            Users(2, "Marcus Chen",   "m.chen@homify.app",        android.R.drawable.ic_menu_myplaces),
-            Users(3, "Leila Ahmed",   "leila.ahmed@campus.com",   android.R.drawable.ic_menu_myplaces),
-            Users(4, "James O'Neill", "j.oneill@housing.org",     android.R.drawable.ic_menu_myplaces)
+        // ── DB: جلب المستخدمين ──
+        val db = (application as HomifyApp).database
+        val factory = ViewModelFactory(
+            application = application,
+            userDao = db.userDao(),
+            unitDao = db.unitDao()
         )
+        adminViewModel = ViewModelProvider(this, factory).get(AdminViewModel::class.java)
+
+        adminViewModel.allUsers.observe(this) { userList ->
+            allUsers.clear()
+            allUsers.addAll(userList.map { user ->
+                Users(
+                    id          = user.userId,
+                    name        = "${user.firstName} ${user.lastName}",
+                    email       = user.email,
+                    avatarResId = R.drawable.ic_person
+                )
+            })
+            adapter.filter("", allUsers)
+        }
 
         // ── RecyclerView Setup ──
         val rvUsers: RecyclerView = findViewById(R.id.rv_users)
@@ -81,6 +102,7 @@ class ManageUsersActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        // كود الdb
     }
 
     /**
@@ -90,13 +112,13 @@ class ManageUsersActivity : AppCompatActivity() {
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.btn_delete))
             .setMessage(getString(R.string.confirm_delete_user_msg))
-            .setPositiveButton(getString(R.string.btn_confirm)) { dialog, _ ->
-                adapter.removeUser(position)
-                allUsers.remove(users)
-                Toast.makeText(this, getString(R.string.toast_user_deleted), Toast.LENGTH_SHORT).show()
+            .setNegativeButton(getString(R.string.btn_cancel)) { dialog, _ ->
                 dialog.dismiss()
             }
-            .setNegativeButton(getString(R.string.btn_cancel)) { dialog, _ ->
+
+            .setPositiveButton(getString(R.string.btn_confirm)) { dialog, _ ->
+                adminViewModel.removeUserById(users.id)  // ← بس كده!
+                Toast.makeText(this, getString(R.string.toast_user_deleted), Toast.LENGTH_SHORT).show()
                 dialog.dismiss()
             }
             .show()

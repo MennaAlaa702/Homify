@@ -16,45 +16,60 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-        val logo = findViewById<ImageView>(R.id.logo)
-        val progress = findViewById<View>(R.id.progressBar)
-        // ضفنا السطر ده عشان نمسك الخلفية الشفافة بتاعة الشريط
-        val progressBg = findViewById<View>(R.id.v_progress_bg)
+        val logo        = findViewById<ImageView>(R.id.logo)
+        val progress    = findViewById<View>(R.id.progressBar)
+        val progressBg  = findViewById<View>(R.id.v_progress_bg)
 
-        // إخفاء اللوجو في البداية عشان الأنيميشن
+        // أنيميشن اللوجو (نفس الكود القديم)
         logo.scaleX = 0f
         logo.scaleY = 0f
-        logo.alpha = 0f
-
-        // 1. أنيميشن اللوجو (بياخد 800 ملي ثانية)
+        logo.alpha  = 0f
         logo.animate()
-            .scaleX(1f)
-            .scaleY(1f)
-            .alpha(1f)
+            .scaleX(1f).scaleY(1f).alpha(1f)
             .setDuration(800)
             .setInterpolator(OvershootInterpolator())
             .start()
 
-        // 2. أنيميشن شريط التحميل
+        // أنيميشن شريط التحميل (نفس الكود القديم)
         progressBg.post {
-            // التعديل هنا: أخدنا عرض الخلفية (progressBg) مش عرض الشاشة كلها
             val targetWidth = progressBg.width.toFloat()
-
-            val animator = ValueAnimator.ofFloat(0f, targetWidth)
-
-            animator.duration = 2000
-            animator.addUpdateListener {
-                val value = it.animatedValue as Float
-                progress.layoutParams.width = value.toInt()
-                progress.requestLayout()
+            ValueAnimator.ofFloat(0f, targetWidth).apply {
+                duration = 2000
+                addUpdateListener {
+                    progress.layoutParams.width = (it.animatedValue as Float).toInt()
+                    progress.requestLayout()
+                }
+                start()
             }
-            animator.start()
         }
 
-        // 3. الانتقال للشاشة التانية بعد ما الأنيميشن يخلص (800 + 2000 = 2800)
+        // بعد انتهاء الأنيميشن، نقرر نروح فين
         Handler(Looper.getMainLooper()).postDelayed({
-            startActivity(Intent(this, OnboardingActivity::class.java))
-            finish()
+            navigateToNextScreen()
         }, 2800)
+    }
+
+    // ════════════════════════════════════════════
+    //  الجديد: نشوف لو في session محفوظة
+    // ════════════════════════════════════════════
+    private fun navigateToNextScreen() {
+        val sharedPref = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        val userId     = sharedPref.getInt("userId", -1)
+        val role       = sharedPref.getString("role", null)
+
+        // لو في userId محفوظ = المستخدم سبق وعمل login
+        val intent = if (userId != -1 && role != null) {
+            when {
+                role.equals("Admin",    ignoreCase = true) -> Intent(this, DashboardActivity::class.java)
+                role.equals("Landlord", ignoreCase = true) -> Intent(this, LandlordHomeActivity::class.java)
+                else                                       -> Intent(this, TenantHome::class.java)
+            }
+        } else {
+            // مفيش session = يروح للـ Onboarding
+            Intent(this, OnboardingActivity::class.java)
+        }
+
+        startActivity(intent)
+        finish()
     }
 }

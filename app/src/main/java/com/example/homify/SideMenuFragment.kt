@@ -9,6 +9,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.appcompat.app.AppCompatDelegate
@@ -29,6 +30,19 @@ class SideMenuFragment : DialogFragment() {
         val menuLanguage = view.findViewById<TextView>(R.id.menu_language)
         val menuLogout = view.findViewById<TextView>(R.id.menu_logout)
 
+        val sharedPref = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        val username = sharedPref.getString("username", "Guest") ?: "Guest"
+        val tvUsername = view.findViewById<TextView>(R.id.tv_menu_name)
+        tvUsername?.text = username
+        val ivMenuProfile = view.findViewById<ImageView>(R.id.iv_menu_profile)
+        val imagePath = sharedPref.getString("profile_image_path", null)
+        if (imagePath != null) {
+            val imgFile = java.io.File(imagePath)
+            if (imgFile.exists()) {
+                val bitmap = android.graphics.BitmapFactory.decodeFile(imgFile.absolutePath)
+                ivMenuProfile.setImageBitmap(bitmap)
+            }
+        }
         // 1. برمجة زرار الـ Home بناءً على الـ Role
         menuHome.setOnClickListener {
             val sharedPref = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)

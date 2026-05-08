@@ -74,6 +74,11 @@ class UnitAdapter(
 
     override fun getItemCount(): Int = units.size
 
+    fun updateData(newList: MutableList<Units>) {
+        units.clear()
+        units.addAll(newList)
+        notifyDataSetChanged()
+    }
     /**
      * Remove a unit from the list and notify the adapter.
      */

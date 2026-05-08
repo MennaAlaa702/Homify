@@ -15,6 +15,7 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
+        requestedOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR
 
         val logo = findViewById<ImageView>(R.id.logo)
         val progress = findViewById<View>(R.id.progressBar)

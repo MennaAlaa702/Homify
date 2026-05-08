@@ -41,7 +41,7 @@ class AddUnitActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_unit)
-
+        requestedOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR
         // ================= 2. استدعاء الدوال التجهيزية =================
         initializeViews()
         setupSpinner()

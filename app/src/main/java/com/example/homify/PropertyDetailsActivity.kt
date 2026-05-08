@@ -17,6 +17,7 @@ class PropertyDetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_property_details)
+        requestedOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR
 
         // جلب البيانات من الـ Intent
         val title = intent.getStringExtra("TITLE") ?: "The Green House"

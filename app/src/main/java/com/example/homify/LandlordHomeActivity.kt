@@ -18,7 +18,7 @@ class LandlordHomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_landlord_home)
-
+        requestedOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR
         // ================= 2. ربط الـ Views =================
         val btnMenu = findViewById<ImageButton>(R.id.btn_menu)
         val rvUnits = findViewById<RecyclerView>(R.id.rv_landlord_units)

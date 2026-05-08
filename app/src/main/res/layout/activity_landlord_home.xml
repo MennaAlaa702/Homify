@@ -3,19 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/screen_background"> <!-- تغيير الخلفية الأساسية -->
+    android:background="@color/screen_background">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="100dp">
 
-            <!-- ================= تضمين الـ APP BAR ================= -->
             <include
                 android:id="@+id/my_app_bar"
                 layout="@layout/layout_app_bar"
@@ -25,7 +28,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
-            <!-- ================= DASHBOARD HEADER ================= -->
             <TextView
                 android:id="@+id/tv_dashboard_title"
                 android:layout_width="wrap_content"
@@ -52,9 +54,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_dashboard_title" />
 
-            <!-- ================= DASHBOARD CARDS ================= -->
-
-            <!-- 1. Total Units Card -->
             <View
                 android:id="@+id/v_total_bg"
                 android:layout_width="0dp"
@@ -103,7 +102,6 @@
                 app:layout_constraintEnd_toEndOf="@id/v_total_bg"
                 app:layout_constraintStart_toStartOf="@id/v_total_bg" />
 
-            <!-- 2. Available Card -->
             <View
                 android:id="@+id/v_avail_bg"
                 android:layout_width="0dp"
@@ -161,7 +159,6 @@
                 app:layout_constraintStart_toStartOf="@id/v_avail_line_bg"
                 app:layout_constraintTop_toTopOf="@id/v_avail_line_bg" />
 
-            <!-- 3. Rented Card -->
             <View
                 android:id="@+id/v_rented_bg"
                 android:layout_width="0dp"
@@ -198,7 +195,6 @@
                 app:layout_constraintStart_toStartOf="@id/v_rented_bg"
                 app:layout_constraintTop_toBottomOf="@id/tv_rented_label" />
 
-            <!-- ================= MY LISTED UNITS ================= -->
             <TextView
                 android:id="@+id/tv_listed_title"
                 android:layout_width="wrap_content"
@@ -221,12 +217,12 @@
                 android:nestedScrollingEnabled="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_listed_title" />
+                app:layout_constraintTop_toBottomOf="@id/tv_listed_title"
+                app:layout_constraintBottom_toBottomOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
-    <!-- Floating Action Button -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add"
         android:layout_width="wrap_content"

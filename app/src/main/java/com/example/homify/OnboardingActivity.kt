@@ -10,7 +10,7 @@ class OnboardingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_onboarding)
-
+        requestedOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR
         val btnStart = findViewById<Button>(R.id.btn_start)
         val btnLogin = findViewById<Button>(R.id.btn_login)
 

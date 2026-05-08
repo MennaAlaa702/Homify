@@ -32,7 +32,7 @@ class ProfileActivity : AppCompatActivity() {
         val splashScreen = installSplashScreen()
         setTheme(R.style.Theme_Homify)
         super.onCreate(savedInstanceState)
-
+        requestedOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR
         // 2. أهم سطر: رسم الشاشة قبل ما نربط أي عنصر
         setContentView(R.layout.activity_profile)
 

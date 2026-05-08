@@ -8,6 +8,7 @@
     android:layout_height="match_parent"
     android:background="@color/background_Beige"
     tools:context=".TenantHome">
+
     <include
         android:id="@+id/my_app_bar"
         layout="@layout/layout_app_bar"
@@ -29,7 +30,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingHorizontal="16dp"
-            android:paddingTop="4dp" android:paddingBottom="16dp">
+            android:paddingTop="4dp"
+            android:paddingBottom="16dp">
 
             <TextView
                 android:id="@+id/tvUserWelcome"
@@ -43,6 +45,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
+
             <EditText
                 android:id="@+id/searchtext"
                 android:layout_width="0dp"

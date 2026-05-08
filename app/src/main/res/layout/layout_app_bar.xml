@@ -4,20 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="8dp"
-    android:background="@color/screen_background"> <!-- التعديل هنا ليتبع خلفية الشاشة -->
-
-    <!-- ================= APP BAR ================= -->
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/iv_profile"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="60dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/pic"
-        app:shapeAppearanceOverlay="@style/RoundedImage"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    android:background="@color/screen_background"> <com.google.android.material.imageview.ShapeableImageView
+    android:id="@+id/iv_profile"
+    android:layout_width="40dp"
+    android:layout_height="40dp"
+    android:layout_marginStart="24dp"
+    android:layout_marginTop="60dp"
+    android:scaleType="centerCrop"
+    android:src="@drawable/pic"
+    app:shapeAppearanceOverlay="@style/RoundedImage"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent" />
 
     <TextView
         android:id="@+id/tv_app_name"
@@ -32,7 +30,6 @@
         app:layout_constraintStart_toEndOf="@id/iv_profile"
         app:layout_constraintTop_toTopOf="@id/iv_profile" />
 
-    <!-- أيقونة الهامبرجر (Menu) -->
     <ImageButton
         android:id="@+id/btn_menu"
         android:layout_width="48dp"

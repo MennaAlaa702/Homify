@@ -12,7 +12,6 @@
         android:layout_height="wrap_content"
         android:paddingBottom="40dp">
 
-        <!-- ================= APP BAR (Back Button) ================= -->
         <ImageButton
             android:id="@+id/btn_back"
             android:layout_width="48dp"
@@ -26,8 +25,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- ================= HEADER ================= -->
-        <!-- Logo -->
         <ImageView
             android:id="@+id/iv_logo"
             android:layout_width="64dp"
@@ -40,7 +37,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- App Name -->
         <TextView
             android:id="@+id/tv_app_name"
             android:layout_width="wrap_content"
@@ -54,7 +50,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Tagline -->
         <TextView
             android:id="@+id/tv_tagline"
             android:layout_width="wrap_content"
@@ -67,7 +62,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- ================= FORM CARD ================= -->
         <View
             android:id="@+id/v_form_bg"
             android:layout_width="0dp"
@@ -81,9 +75,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- ================= INPUT FIELDS ================= -->
-
-        <!-- 1. Email -->
         <TextView
             android:id="@+id/tv_label_email"
             android:layout_width="wrap_content"
@@ -111,7 +102,6 @@
             app:layout_constraintStart_toStartOf="@id/v_form_bg"
             app:layout_constraintEnd_toEndOf="@id/v_form_bg" />
 
-        <!-- ضيفي ده: سطر الإيرور للايميل -->
         <TextView
             android:id="@+id/tv_error_email"
             android:layout_width="0dp"
@@ -124,7 +114,6 @@
             app:layout_constraintStart_toStartOf="@id/et_email"
             app:layout_constraintEnd_toEndOf="@id/et_email" />
 
-        <!-- 2. Password -->
         <TextView
             android:id="@+id/tv_label_password"
             android:layout_width="wrap_content"
@@ -153,7 +142,6 @@
             app:layout_constraintStart_toStartOf="@id/v_form_bg"
             app:layout_constraintEnd_toEndOf="@id/v_form_bg" />
 
-        <!-- ضيفي ده: سطر الإيرور للباسورد -->
         <TextView
             android:id="@+id/tv_error_password"
             android:layout_width="0dp"
@@ -166,7 +154,6 @@
             app:layout_constraintStart_toStartOf="@id/et_password"
             app:layout_constraintEnd_toEndOf="@id/et_password" />
 
-        <!-- Forgot Password (Brand Color) -->
         <TextView
             android:id="@+id/tv_forgot_password"
             android:layout_width="wrap_content"
@@ -177,10 +164,9 @@
             android:textStyle="bold"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="20dp"
-            app:layout_constraintTop_toBottomOf="@id/et_password"
+            app:layout_constraintTop_toBottomOf="@id/tv_error_password"
             app:layout_constraintEnd_toEndOf="@id/v_form_bg" />
 
-        <!-- Login Button -->
         <Button
             android:id="@+id/btn_login"
             android:layout_width="0dp"
@@ -197,7 +183,6 @@
             app:layout_constraintStart_toStartOf="@id/v_form_bg"
             app:layout_constraintEnd_toEndOf="@id/v_form_bg" />
 
-        <!-- ================= BOTTOM LINKS ================= -->
         <TextView
             android:id="@+id/tv_register_link"
             android:layout_width="wrap_content"
@@ -206,7 +191,9 @@
             android:textColor="#2E5C8A"
             android:textSize="14sp"
             android:layout_marginTop="40dp"
+            android:layout_marginBottom="24dp"
             app:layout_constraintTop_toBottomOf="@id/v_form_bg"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 

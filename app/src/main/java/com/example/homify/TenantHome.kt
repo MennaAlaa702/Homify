@@ -26,6 +26,7 @@ class TenantHome : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.tenant_home)
+        requestedOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR
 
         val btnFilter = findViewById<MaterialCardView>(R.id.btnFiltert)
         val recyclerView = findViewById<RecyclerView>(R.id.rvProperties)

@@ -1,106 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/splash_gradient">
+    android:fillViewport="true">
 
-    <!-- ================= CENTER CONTENT (Flat Hierarchy - Packed Chain) ================= -->
-
-    <!-- LOGO -->
-    <ImageView
-        android:id="@+id/logo"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
-        android:src="@drawable/home_logo"
-        android:background="@drawable/logo_bg"
-        android:padding="28dp"
-        android:elevation="10dp"
-        app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/tv_app_title"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <!-- APP NAME -->
-    <TextView
-        android:id="@+id/tv_app_title"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/app_title"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="#1E3A5F"
-        android:layout_marginTop="18dp"
-        app:layout_constraintTop_toBottomOf="@+id/logo"
-        app:layout_constraintBottom_toTopOf="@+id/tv_tagline"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:background="@drawable/splash_gradient">
 
-    <!-- TAGLINE -->
-    <TextView
-        android:id="@+id/tv_tagline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/tagline"
-        android:textSize="15sp"
-        android:textColor="#6B7C8F"
-        android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@+id/tv_app_title"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:src="@drawable/home_logo"
+            android:background="@drawable/logo_bg"
+            android:padding="28dp"
+            android:elevation="10dp"
+            android:layout_marginTop="50dp"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/tv_app_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- ================= FOOTER ================= -->
-    <TextView
-        android:id="@+id/footerText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/footer_text"
-        android:textColor="#5F7FA0"
-        android:textSize="15sp"
-        android:layout_marginBottom="50dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <TextView
+            android:id="@+id/tv_app_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_title"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#1E3A5F"
+            android:layout_marginTop="18dp"
+            app:layout_constraintTop_toBottomOf="@+id/logo"
+            app:layout_constraintBottom_toTopOf="@+id/tv_tagline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- ================= LOADING SECTION ================= -->
+        <TextView
+            android:id="@+id/tv_tagline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tagline"
+            android:textSize="15sp"
+            android:textColor="#6B7C8F"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="32dp"
+            app:layout_constraintTop_toBottomOf="@+id/tv_app_title"
+            app:layout_constraintBottom_toTopOf="@+id/v_progress_bg"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- LOADING TEXT -->
-    <TextView
-        android:id="@+id/tv_loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/loading"
-        android:textSize="13sp"
-        android:letterSpacing="0.3"
-        android:textColor="#6B7C8F"
-        android:layout_marginBottom="100dp"
-        app:layout_constraintBottom_toTopOf="@+id/footerText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <View
+            android:id="@+id/v_progress_bg"
+            android:layout_width="220dp"
+            android:layout_height="4dp"
+            android:background="#33FFFFFF"
+            android:layout_marginBottom="14dp"
+            app:layout_constraintBottom_toTopOf="@+id/tv_loading"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- PROGRESS BAR BACKGROUND -->
-    <View
+        <View
+            android:id="@+id/progressBar"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="#FFFFFF"
+            app:layout_constraintTop_toTopOf="@+id/v_progress_bg"
+            app:layout_constraintBottom_toBottomOf="@+id/v_progress_bg"
+            app:layout_constraintStart_toStartOf="@+id/v_progress_bg" />
 
-        android:id="@+id/v_progress_bg"
-        android:layout_width="220dp"
-        android:layout_height="4dp"
-        android:background="#33FFFFFF"
-        android:layout_marginBottom="14dp"
-        app:layout_constraintBottom_toTopOf="@+id/tv_loading"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <TextView
+            android:id="@+id/tv_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/loading"
+            android:textSize="13sp"
+            android:letterSpacing="0.3"
+            android:textColor="#6B7C8F"
+            android:layout_marginBottom="100dp"
+            app:layout_constraintBottom_toTopOf="@+id/footerText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- PROGRESS BAR FOREGROUND -->
-    <View
-        android:id="@+id/progressBar"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="#FFFFFF"
-        app:layout_constraintTop_toTopOf="@+id/v_progress_bg"
-        app:layout_constraintBottom_toBottomOf="@+id/v_progress_bg"
-        app:layout_constraintStart_toStartOf="@+id/v_progress_bg" />
+        <TextView
+            android:id="@+id/footerText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/footer_text"
+            android:textColor="#5F7FA0"
+            android:textSize="15sp"
+            android:layout_marginBottom="50dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

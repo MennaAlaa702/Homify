@@ -11,60 +11,80 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
-
+import data.viewmodel.AdminViewModel
+import data.viewmodel.ViewModelFactory
 
 /**
  * ManageUsersActivity — lists all platform users with delete functionality.
  * Receives data from DashboardActivity via Intent extras.
  * Uses RecyclerView + UserAdapter for dynamic list rendering.
  */
-class ManageUsersActivity : AppCompatActivity() {
+class manageUsersActivity : AppCompatActivity() {
 
-    private lateinit var adapter: UserAdapter
-    private lateinit var allUsers: MutableList<Users>
+    private lateinit var adapter: userAdapter
+    private var allUsers: MutableList<users> = mutableListOf()
+    private lateinit var adminViewModel: AdminViewModel
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_manage_users)
+
+        // 1. تثبيت اتجاه الشاشة (من النسخة الأولى)
         requestedOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR
+
+        // 2. إعداد الـ Toolbar وسهم الرجوع
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-// تفعيل سهم الرجوع
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
-// برمجة زرار السهم
         toolbar.setNavigationOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        // Receive extras from DashboardActivity (Explicit Intent data)
-        val totalUsers = intent.getStringExtra("TOTAL_USERS") ?: "2,842"
-        val growth = intent.getStringExtra("GROWTH") ?: "+12%"
+        // Receive extras from DashboardActivity (اختياري لو هتعرضيهم)
+        val totalUsers = intent.getStringExtra(getString(R.string.total__units)) ?: getString(R.string._2_842)
+        val growth = intent.getStringExtra(getString(R.string.growth)) ?: "+12%"
 
-        // ── Sample user data ──
-        allUsers = mutableListOf(
-            Users(1, "Sarah Miller",  "sarah.m@university.edu",  android.R.drawable.ic_menu_myplaces),
-            Users(2, "Marcus Chen",   "m.chen@homify.app",        android.R.drawable.ic_menu_myplaces),
-            Users(3, "Leila Ahmed",   "leila.ahmed@campus.com",   android.R.drawable.ic_menu_myplaces),
-            Users(4, "James O'Neill", "j.oneill@housing.org",     android.R.drawable.ic_menu_myplaces)
+        // 3. إعداد الـ DB والـ ViewModel (من النسخة التانية)
+        val db = (application as homifyApp).database
+        val factory = ViewModelFactory(
+            application = application,
+            userDao = db.userDao(),
+            unitDao = db.unitDao()
         )
+        adminViewModel = ViewModelProvider(this, factory)[AdminViewModel::class.java]
 
-        // ── RecyclerView Setup ──
+        // 4. إعداد الـ RecyclerView
         val rvUsers: RecyclerView = findViewById(R.id.rv_users)
-        adapter = UserAdapter(allUsers.toMutableList()) { user, position ->
+        adapter = userAdapter(allUsers.toMutableList()) { user, position ->
             showDeleteUserDialog(user, position)
         }
         rvUsers.layoutManager = LinearLayoutManager(this)
         rvUsers.adapter = adapter
 
-        // ── Quick Search ──
+        // 5. جلب المستخدمين الحقيقيين من الداتابيز ومراقبتهم
+        adminViewModel.allUsers.observe(this) { userList ->
+            allUsers.clear()
+            allUsers.addAll(userList.map { user ->
+                users(
+                    id          = user.userId,
+                    name        = "${user.firstName} ${user.lastName}",
+                    email       = user.email,
+                    avatarResId = R.drawable.ic_person // صورة ديفولت لكل يوزر
+                )
+            })
+            // تحديث الشاشة بعد جلب الداتا
+            adapter.filter("", allUsers)
+        }
+
+        // 6. كود البحث السريع (Quick Search)
         val etSearch: EditText = findViewById(R.id.et_search_users)
         etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -74,25 +94,24 @@ class ManageUsersActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {}
         })
 
-        // ── Add New User Button ──
+        // 7. زرار إضافة مستخدم جديد
         val btnAddUser: MaterialButton = findViewById(R.id.btn_add_new_user)
         btnAddUser.setOnClickListener {
-            val intent = Intent(this, RegisterActivity::class.java)
+            val intent = Intent(this, registerActivity::class.java)
             startActivity(intent)
         }
-
     }
 
     /**
      * Show an AlertDialog to confirm user deletion before removing.
      */
-    private fun showDeleteUserDialog(users: Users, position: Int) {
+    private fun showDeleteUserDialog(users: users, position: Int) {
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.btn_delete))
             .setMessage(getString(R.string.confirm_delete_user_msg))
             .setPositiveButton(getString(R.string.btn_confirm)) { dialog, _ ->
-                adapter.removeUser(position)
-                allUsers.remove(users)
+                // المسح الحقيقي من الداتابيز (والـ observer هيحدث الشاشة لوحده)
+                adminViewModel.removeUserById(users.id)
                 Toast.makeText(this, getString(R.string.toast_user_deleted), Toast.LENGTH_SHORT).show()
                 dialog.dismiss()
             }
@@ -107,22 +126,4 @@ class ManageUsersActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.main_menu, menu)
         return true
     }
-
-    /*override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            android.R.id.home -> {
-                finish()
-                true
-            }
-            R.id.menu_search -> {
-                Toast.makeText(this, getString(R.string.menu_search), Toast.LENGTH_SHORT).show()
-                true
-            }
-            R.id.menu_settings -> {
-                Toast.makeText(this, getString(R.string.settings_coming_soon), Toast.LENGTH_SHORT).show()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }*/
 }

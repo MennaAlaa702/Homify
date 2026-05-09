@@ -16,30 +16,101 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.toColorInt
+import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
+import kotlinx.coroutines.launch
+import data.AppDatabase
+import java.io.File
 
-class PropertyDetailsActivity : AppCompatActivity() {
+class propertyDetailsActivity : AppCompatActivity() {
+
+    private var isDarkMode = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_property_details)
+        requestedOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR
 
-        val isDarkMode = (resources.configuration.uiMode and
+
+        // --- تحديد وتطبيق المود (Dark/Light) ---
+        isDarkMode = (resources.configuration.uiMode and
                 android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
                 android.content.res.Configuration.UI_MODE_NIGHT_YES
 
-        // تطبيق الألوان حسب المود
         if (isDarkMode) {
             applyDarkModeProgrammatically()
         } else {
-            applyLightModeSettings() // دالة للتأكد من نظافة اللايت مود
+            applyLightModeSettings()
         }
 
-        // --- جلب البيانات ---
+        // --- أزرار أساسية ---
+        findViewById<ImageView>(R.id.btnBack).setOnClickListener { finish() }
+
+        findViewById<View>(R.id.bg_card_landlord).setOnClickListener {
+            val intent = Intent(this, profileActivity::class.java)
+            startActivity(intent)
+        }
+
+        // --- جلب البيانات (Database أو Fallback) ---
+        val unitId = intent.getIntExtra("UNIT_ID", -1)
+
+        if (unitId != -1) {
+            loadUnitDetails(unitId)
+        } else {
+            loadFromIntentFallback()
+        }
+    }
+
+    private fun loadUnitDetails(unitId: Int) {
+        val database = AppDatabase.getDatabase(this)
+
+        lifecycleScope.launch {
+            val unit = database.unitDao().getUnitById(unitId)
+            unit?.let {
+                // ربط البيانات الأساسية
+                findViewById<TextView>(R.id.tvDetailTitle).text = it.title
+                findViewById<TextView>(R.id.tvDetailPrice).text = "${it.price} EGP"
+                findViewById<TextView>(R.id.tvDetailLocation).text = "${it.address}, ${it.governorate}"
+                findViewById<TextView>(R.id.tvDescription).text = it.description
+
+                // تحديث صناديق المميزات
+                setupFeatureBox(R.id.featureBed, R.drawable.bed, "${it.bedrooms} Bedroom")
+                setupFeatureBox(R.id.featureBath, R.drawable.ic_bathroom, "${it.bathrooms} Bathroom")
+                setupFeatureBox(R.id.featureArea, R.drawable.area, "${it.size} m²")
+
+                // إعداد الخريطة
+                setupMap(it.address, "https://maps.google.com/maps?q=${it.address.replace(" ", "+")}")
+
+                // جلب بيانات المالك والاتصال
+                val landlordProfile = database.profileDao().getLandlordByUserId(it.landlordId)
+                val phone = landlordProfile?.phoneNumber ?: ""
+                setupCallButton(phone)
+
+                val landlordName = "${landlordProfile?.firstName} ${landlordProfile?.lastName}"
+                findViewById<TextView>(R.id.tvLandlordName).text = landlordName
+
+                // إعداد الصورة باستخدام Glide
+                val firstImage = it.images.split(",").firstOrNull()?.trim() ?: ""
+                val imageView = findViewById<ImageView>(R.id.ivDetailImage)
+                if (firstImage.isNotEmpty()) {
+                    val file = File(firstImage)
+                    if (file.exists()) {
+                        Glide.with(this@propertyDetailsActivity).load(file).into(imageView)
+                    } else {
+                        imageView.setImageResource(R.drawable.home3)
+                    }
+                } else {
+                    imageView.setImageResource(R.drawable.home3)
+                }
+            }
+        }
+    }
+
+    private fun loadFromIntentFallback() {
         val title = intent.getStringExtra("TITLE") ?: "The Green House"
         val price = intent.getStringExtra("PRICE") ?: "650"
         val address = intent.getStringExtra("ADDRESS") ?: "Shalaby, St 10"
         val desc = intent.getStringExtra("DESC") ?: "A cozy studio near the university..."
-        val imageRes = intent.getIntExtra("IMAGE", R.drawable.home3)
         val mapLink = intent.getStringExtra("MAP_LINK") ?: "https://maps.google.com"
         val beds = intent.getStringExtra("BEDS") ?: "1"
         val baths = intent.getStringExtra("BATHS") ?: "1"
@@ -49,18 +120,38 @@ class PropertyDetailsActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.tvDetailPrice).text = "$price EGP"
         findViewById<TextView>(R.id.tvDetailLocation).text = address
         findViewById<TextView>(R.id.tvDescription).text = desc
-        findViewById<ImageView>(R.id.ivDetailImage).setImageResource(imageRes)
 
         setupFeatureBox(R.id.featureBed, R.drawable.bed, "$beds Bedroom")
         setupFeatureBox(R.id.featureBath, R.drawable.ic_bathroom, "$baths Bathroom")
         setupFeatureBox(R.id.featureArea, R.drawable.area, "$area m²")
 
-        // --- إعداد الخريطة الذكية ---
+        // تحميل الصورة: محاولة قراءة رابط نصي، وإن لم يوجد، نستخدم الـ ID من الـ Resources
+        val imagePath = intent.getStringExtra("IMAGE_PATH") ?: ""
+        val imageView = findViewById<ImageView>(R.id.ivDetailImage)
+        if (imagePath.isNotEmpty()) {
+            val file = File(imagePath)
+            if (file.exists()) {
+                Glide.with(this).load(file).into(imageView)
+            } else {
+                imageView.setImageResource(R.drawable.home3)
+            }
+        } else {
+            val imageRes = intent.getIntExtra("IMAGE", R.drawable.home3)
+            imageView.setImageResource(imageRes)
+        }
+
+        setupMap(address, mapLink)
+
+        // زر الاتصال في حالة الـ Fallback
+        setupCallButton("0123456789")
+    }
+
+    private fun setupMap(address: String, fallbackMapLink: String) {
         val webView = findViewById<WebView>(R.id.mapWebView)
         webView.settings.javaScriptEnabled = true
         webView.webViewClient = WebViewClient()
 
-        // حل مشكلة التحول: استخدام CSS شفاف وواضح لكل مود
+        // إعداد الخريطة الذكية لدعم الـ Dark Mode برمجياً و بـ CSS
         val mapFilter = if (isDarkMode) "invert(90%) hue-rotate(180deg)" else "none"
         val bgHex = if (isDarkMode) "#121212" else "#FFFFFF"
 
@@ -80,49 +171,40 @@ class PropertyDetailsActivity : AppCompatActivity() {
 
         webView.loadDataWithBaseURL(null, htmlData, "text/html", "UTF-8", null)
 
-        // التحكم في الـ ForceDark برمجياً لضمان التحول
+        // التحكم في الـ ForceDark للـ WebView
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             @Suppress("DEPRECATION")
             webView.settings.forceDark = if (isDarkMode) WebSettings.FORCE_DARK_ON else WebSettings.FORCE_DARK_OFF
         }
 
-        // --- الأزرار ---
+        // فتح الخرائط الخارجية
         findViewById<TextView>(R.id.btnOpenMaps).setOnClickListener {
-            // 1. يفضل استخدام geo intent بدل اللينكات العادية لضمان فتح تطبيق الخرائط
-            // لو الـ mapLink فيه إحداثيات، استخلصيها، لو مفيش استخدمي العنوان
             val gmmIntentUri = Uri.parse("geo:0,0?q=${address.replace(" ", "+")}")
-
             val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
-
-            // 2. إجبار السيستم على فتح تطبيق خرائط جوجل تحديداً
             mapIntent.setPackage("com.google.android.apps.maps")
 
-            // 3. شرط الدكتور: التأكد من وجود تطبيق للخرائط
             if (mapIntent.resolveActivity(packageManager) != null) {
                 startActivity(mapIntent)
             } else {
-                // لو مفيش تطبيق خرائط، نفتح اللينك في المتصفح كخيار بديل أخير
-                val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse(mapLink))
+                val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse(fallbackMapLink))
                 startActivity(webIntent)
             }
         }
+    }
 
-        findViewById<ImageView>(R.id.btnBack).setOnClickListener { finish() }
-
-        findViewById<View>(R.id.cardLandlord).setOnClickListener {
-            val intent = Intent(this, ProfileActivity::class.java)
-            startActivity(intent)
-        }
-
-        // --- تصحيح زرار الاتصال (Implicit Intent) ---
+    private fun setupCallButton(phoneNumber: String) {
         val btnCall = findViewById<Button>(R.id.btnCallLandlord)
         btnCall.setOnClickListener {
-            val phoneNumber = "0123456789"
+            if (phoneNumber.isEmpty()) {
+                Toast.makeText(this, "No phone number available", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // استخدام ACTION_DIAL كما حدد الدكتور لفتح لوحة الاتصال بأمان
             val intent = Intent(Intent.ACTION_DIAL).apply {
                 data = Uri.parse("tel:$phoneNumber")
             }
 
-            // شرط الدكتور: التأكد من وجود تطبيق للاتصال (معالجة الأخطاء)
             if (intent.resolveActivity(packageManager) != null) {
                 startActivity(intent)
             } else {
@@ -146,19 +228,17 @@ class PropertyDetailsActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.tvLocationMapTitle).setTextColor(Color.WHITE)
         findViewById<TextView>(R.id.tvDetailPrice).setTextColor("#2196F3".toColorInt())
 
-        // تفتيح لون الكروت الصغيرة في الدارك مود (#333333 أفتح من #1E1E1E)
         updateFeatureCardStyle(R.id.featureBed, "#333333", Color.WHITE)
         updateFeatureCardStyle(R.id.featureBath, "#333333", Color.WHITE)
         updateFeatureCardStyle(R.id.featureArea, "#333333", Color.WHITE)
 
-        val cardLandlord = findViewById<androidx.cardview.widget.CardView>(R.id.cardLandlord)
-        cardLandlord.setCardBackgroundColor("#252525".toColorInt()) // أفتح شوية
+        val cardLandlord = findViewById<androidx.cardview.widget.CardView>(R.id.bg_card_landlord)
+        cardLandlord.setCardBackgroundColor("#252525".toColorInt())
         findViewById<TextView>(R.id.tvLandlordName).setTextColor(Color.WHITE)
         findViewById<TextView>(R.id.tvOwnerLabel).setTextColor("#888888".toColorInt())
     }
 
     private fun applyLightModeSettings() {
-        // التأكد من أن الكروت في اللايت مود ترجع لألوانها الأصلية (أبيض أو رمادي فاتح جداً)
         updateFeatureCardStyle(R.id.featureBed, "#F5F5F5", Color.BLACK)
         updateFeatureCardStyle(R.id.featureBath, "#F5F5F5", Color.BLACK)
         updateFeatureCardStyle(R.id.featureArea, "#F5F5F5", Color.BLACK)
@@ -172,9 +252,9 @@ class PropertyDetailsActivity : AppCompatActivity() {
 
     private fun setupFeatureBox(viewId: Int, iconId: Int, text: String) {
         val view = findViewById<View>(viewId)
-        if (view != null) {
-            view.findViewById<ImageView>(R.id.ivFeatureIcon).setImageResource(iconId)
-            view.findViewById<TextView>(R.id.tvFeatureValue).text = text
+        view?.let {
+            it.findViewById<ImageView>(R.id.ivFeatureIcon).setImageResource(iconId)
+            it.findViewById<TextView>(R.id.tvFeatureValue).text = text
         }
     }
 }

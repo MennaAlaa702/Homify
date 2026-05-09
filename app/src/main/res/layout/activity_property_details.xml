@@ -213,10 +213,10 @@
                     android:layout_height="match_parent" />
             </androidx.cardview.widget.CardView>
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardLandlord"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/bg_card_landlord"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginHorizontal="20dp"
                 app:cardBackgroundColor="#F8F8F8"
@@ -226,60 +226,64 @@
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
                 app:layout_constraintTop_toBottomOf="@+id/mapCardView"
+                app:layout_constraintBottom_toBottomOf="@+id/ivLandlord"
+                android:layout_marginBottom="-16dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:layout_constraintEnd_toEndOf="parent" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="16dp">
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivLandlord"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:src="@drawable/ic_default_profile"
+                app:shapeAppearanceOverlay="@style/CircleImage"
+                android:scaleType="centerCrop"
+                android:elevation="1dp"
+                app:layout_constraintTop_toTopOf="@+id/bg_card_landlord"
+                app:layout_constraintStart_toStartOf="@+id/bg_card_landlord" />
 
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:id="@+id/ivLandlord"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:src="@drawable/ic_default_profile"
-                        app:shapeAppearanceOverlay="@style/CircleImage"
-                        android:scaleType="centerCrop"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
+            <TextView
+                android:id="@+id/tvLandlordName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:text="@string/landLorD_name"
+                android:textStyle="bold"
+                android:textColor="#1A1A1A"
+                android:elevation="1dp"
+                app:layout_constraintTop_toTopOf="@+id/ivLandlord"
+                app:layout_constraintStart_toEndOf="@+id/ivLandlord"
+                app:layout_constraintEnd_toStartOf="@+id/ivArrowOwner"
+                app:layout_constraintBottom_toTopOf="@+id/tvOwnerLabel"
+                app:layout_constraintVertical_chainStyle="packed" />
 
-                    <TextView
-                        android:id="@+id/tvLandlordName"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:text="@string/landLorD_name"
-                        android:textStyle="bold"
-                        android:textColor="#1A1A1A"
-                        app:layout_constraintTop_toTopOf="@+id/ivLandlord"
-                        app:layout_constraintStart_toEndOf="@+id/ivLandlord"
-                        app:layout_constraintEnd_toStartOf="@+id/ivArrowOwner" />
+            <TextView
+                android:id="@+id/tvOwnerLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/property_owner"
+                android:textSize="12sp"
+                android:textColor="#666666"
+                android:elevation="1dp"
+                app:layout_constraintTop_toBottomOf="@+id/tvLandlordName"
+                app:layout_constraintStart_toStartOf="@+id/tvLandlordName"
+                app:layout_constraintEnd_toStartOf="@+id/ivArrowOwner"
+                app:layout_constraintBottom_toBottomOf="@+id/ivLandlord" />
 
-                    <TextView
-                        android:id="@+id/tvOwnerLabel"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="@string/property_owner"
-                        android:textSize="12sp"
-                        android:textColor="#666666"
-                        app:layout_constraintTop_toBottomOf="@+id/tvLandlordName"
-                        app:layout_constraintStart_toStartOf="@+id/tvLandlordName"
-                        app:layout_constraintEnd_toStartOf="@+id/ivArrowOwner" />
-
-                    <ImageView
-                        android:id="@+id/ivArrowOwner"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/backarrow"
-                        android:rotation="180"
-                        app:tint="#CCCCCC"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.cardview.widget.CardView>
+            <ImageView
+                android:id="@+id/ivArrowOwner"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/backarrow"
+                android:rotation="180"
+                app:tint="#CCCCCC"
+                android:elevation="1dp"
+                app:layout_constraintTop_toTopOf="@+id/ivLandlord"
+                app:layout_constraintBottom_toBottomOf="@+id/ivLandlord"
+                app:layout_constraintEnd_toEndOf="@+id/bg_card_landlord" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnCallLandlord"
@@ -289,12 +293,12 @@
                 android:layout_marginHorizontal="20dp"
                 android:text="@string/CaLL_landlord"
                 app:icon="@android:drawable/ic_menu_call"
-                android:backgroundTint="#2196F3"
+                app:backgroundTint="#2196F3"
                 app:cornerRadius="12dp"
                 android:textAllCaps="false"
                 android:textSize="16sp"
                 style="@style/Widget.MaterialComponents.Button.Icon"
-                app:layout_constraintTop_toBottomOf="@+id/cardLandlord"
+                app:layout_constraintTop_toBottomOf="@+id/bg_card_landlord"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent" />

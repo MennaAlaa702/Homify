@@ -13,10 +13,10 @@ import androidx.recyclerview.widget.RecyclerView
  * RecyclerView Adapter for displaying users in ManageUsersActivity.
  * Supports delete action per item.
  */
-class UserAdapter(
-    private val users: MutableList<Users>,
-    private val onDeleteClick: (Users, Int) -> Unit
-) : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
+class userAdapter(
+    private val users: MutableList<users>,
+    private val onDeleteClick: (users, Int) -> Unit
+) : RecyclerView.Adapter<userAdapter.UserViewHolder>() {
 
     inner class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val ivAvatar: ImageView = itemView.findViewById(R.id.iv_user_avatar)
@@ -60,7 +60,7 @@ class UserAdapter(
     /**
      * Filter users by name and refresh the list.
      */
-    fun filter(query: String, allUsers: List<Users>) {
+    fun filter(query: String, allUsers: List<users>) {
         users.clear()
         if (query.isEmpty()) {
             users.addAll(allUsers)

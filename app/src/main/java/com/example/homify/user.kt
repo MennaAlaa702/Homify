@@ -1,6 +1,6 @@
 package com.example.homify
 
-data class User(
+data class user(
     val fullName: String = "",
     val email: String = "",
     val phoneNumber: String = "",

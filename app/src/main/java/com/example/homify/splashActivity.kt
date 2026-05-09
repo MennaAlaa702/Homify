@@ -10,7 +10,7 @@ import android.view.animation.OvershootInterpolator
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 
-class SplashActivity : AppCompatActivity() {
+class splashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +54,7 @@ class SplashActivity : AppCompatActivity() {
 
         // 3. الانتقال للشاشة التانية بعد ما الأنيميشن يخلص (800 + 2000 = 2800)
         Handler(Looper.getMainLooper()).postDelayed({
-            startActivity(Intent(this, OnboardingActivity::class.java))
+            startActivity(Intent(this, onboardingActivity::class.java))
             finish()
         }, 2800)
     }

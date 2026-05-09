@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 
-class OnboardingActivity : AppCompatActivity() {
+class onboardingActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,12 +16,12 @@ class OnboardingActivity : AppCompatActivity() {
 
         // يفتح شاشة الـ Register
         btnStart.setOnClickListener {
-            startActivity(Intent(this, RegisterActivity::class.java))
+            startActivity(Intent(this, registerActivity::class.java))
         }
 
         // يفتح شاشة الـ Login
         btnLogin.setOnClickListener {
-            startActivity(Intent(this, LoginActivity::class.java))
+            startActivity(Intent(this, loginActivity::class.java))
         }
     }
 }

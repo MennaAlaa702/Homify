@@ -14,10 +14,10 @@ import com.google.android.material.button.MaterialButton
  * RecyclerView Adapter for displaying property units in ManageUnitsActivity.
  * Supports delete action per item.
  */
-class UnitAdapter(
-    private val units: MutableList<Units>,
-    private val onDeleteClick: (Units, Int) -> Any // غيري كلمة Unit الأخيرة لـ Any
-) : RecyclerView.Adapter<UnitAdapter.UnitViewHolder>() {
+class unitAdapter(
+    private val units: MutableList<units>,
+    private val onDeleteClick: (units, Int) -> Any // غيري كلمة Unit الأخيرة لـ Any
+) : RecyclerView.Adapter<unitAdapter.UnitViewHolder>() {
 
     inner class UnitViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val ivImage: ImageView = itemView.findViewById(R.id.iv_unit_image)

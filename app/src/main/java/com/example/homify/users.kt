@@ -3,7 +3,7 @@ package com.example.homify
 /**
  * Data model representing a platform user (tenant or admin).
  */
-data class Users(
+data class users(
     val id: Int,
     val name: String,
     val email: String,

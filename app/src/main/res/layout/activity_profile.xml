@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/background_Beige"
     android:fitsSystemWindows="true"
-    tools:context=".ProfileActivity">
+    tools:context=".profileActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/profile_toolbar"
@@ -19,34 +19,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:text="@string/app_title"
+            android:textColor="@color/primary_blue"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/app_title"
-                android:textColor="@color/primary_blue"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageButton
-                android:id="@+id/btn_open_menu"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginEnd="16dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_menu"
-                app:tint="@color/primary_blue"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageButton
+            android:id="@+id/btn_open_menu"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="16dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_menu"
+            app:tint="@color/primary_blue" />
     </androidx.appcompat.widget.Toolbar>
 
     <androidx.core.widget.NestedScrollView
@@ -120,7 +110,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardEmail"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_marginTop="16dp"
                 app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="16dp"
@@ -128,43 +118,42 @@
                 app:strokeColor="@color/text_black_primary"
                 app:strokeWidth="1dp"
                 app:layout_constraintTop_toBottomOf="@id/tvAccountDetailsTitle"
+                app:layout_constraintBottom_toBottomOf="@+id/ivEmailIcon"
+                android:layout_marginBottom="-16dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:layout_constraintEnd_toEndOf="parent" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="16dp">
+            <ImageView
+                android:id="@+id/ivEmailIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:src="@android:drawable/ic_dialog_email"
+                app:tint="@color/developColor"
+                android:elevation="1dp"
+                app:layout_constraintTop_toTopOf="@+id/cardEmail"
+                app:layout_constraintStart_toStartOf="@+id/cardEmail" />
 
-                    <ImageView
-                        android:id="@+id/ivEmailIcon"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@android:drawable/ic_dialog_email"
-                        app:tint="@color/developColor"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
-
-                    <TextView
-                        android:id="@+id/tvEmail"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:text="@string/email"
-                        android:textColor="@color/_text_black_primary"
-                        android:textSize="16sp"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/ivEmailIcon"
-                        app:layout_constraintEnd_toEndOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
+            <TextView
+                android:id="@+id/tvEmail"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/email"
+                android:textColor="@color/_text_black_primary"
+                android:textSize="16sp"
+                android:elevation="1dp"
+                app:layout_constraintTop_toTopOf="@+id/ivEmailIcon"
+                app:layout_constraintBottom_toBottomOf="@+id/ivEmailIcon"
+                app:layout_constraintStart_toEndOf="@+id/ivEmailIcon"
+                app:layout_constraintEnd_toEndOf="@+id/cardEmail" />
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardPhone"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_marginTop="12dp"
                 app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="16dp"
@@ -172,43 +161,42 @@
                 app:strokeColor="@color/text_black_primary"
                 app:strokeWidth="1dp"
                 app:layout_constraintTop_toBottomOf="@id/cardEmail"
+                app:layout_constraintBottom_toBottomOf="@+id/ivPhoneIcon"
+                android:layout_marginBottom="-16dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:layout_constraintEnd_toEndOf="parent" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="16dp">
+            <ImageView
+                android:id="@+id/ivPhoneIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:src="@android:drawable/ic_menu_call"
+                app:tint="@color/phonecolor"
+                android:elevation="1dp"
+                app:layout_constraintTop_toTopOf="@+id/cardPhone"
+                app:layout_constraintStart_toStartOf="@+id/cardPhone" />
 
-                    <ImageView
-                        android:id="@+id/ivPhoneIcon"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@android:drawable/ic_menu_call"
-                        app:tint="@color/phonecolor"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
-
-                    <TextView
-                        android:id="@+id/tvPhone"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:text="@string/phoneNumber"
-                        android:textColor="@color/_text_black_primary"
-                        android:textSize="16sp"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/ivPhoneIcon"
-                        app:layout_constraintEnd_toEndOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
+            <TextView
+                android:id="@+id/tvPhone"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/phoneNumber"
+                android:textColor="@color/_text_black_primary"
+                android:textSize="16sp"
+                android:elevation="1dp"
+                app:layout_constraintTop_toTopOf="@+id/ivPhoneIcon"
+                app:layout_constraintBottom_toBottomOf="@+id/ivPhoneIcon"
+                app:layout_constraintStart_toEndOf="@+id/ivPhoneIcon"
+                app:layout_constraintEnd_toEndOf="@+id/cardPhone" />
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardNationalId"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_marginTop="12dp"
                 app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="16dp"
@@ -216,93 +204,87 @@
                 app:strokeColor="@color/text_black_primary"
                 app:strokeWidth="1dp"
                 app:layout_constraintTop_toBottomOf="@id/cardPhone"
+                app:layout_constraintBottom_toBottomOf="@+id/ivNidIcon"
+                android:layout_marginBottom="-16dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:layout_constraintEnd_toEndOf="parent" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="16dp">
+            <ImageView
+                android:id="@+id/ivNidIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:src="@android:drawable/ic_menu_agenda"
+                app:tint="@color/nIcolor"
+                android:elevation="1dp"
+                app:layout_constraintTop_toTopOf="@+id/cardNationalId"
+                app:layout_constraintStart_toStartOf="@+id/cardNationalId" />
 
-                    <ImageView
-                        android:id="@+id/ivNidIcon"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@android:drawable/ic_menu_agenda"
-                        app:tint="@color/nIcolor"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
-
-                    <TextView
-                        android:id="@+id/tvNationalId"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:text="@string/nationalid"
-                        android:textColor="@color/_text_black_primary"
-                        android:textSize="16sp"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/ivNidIcon"
-                        app:layout_constraintEnd_toEndOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/layoutLandlordOnly"
+            <TextView
+                android:id="@+id/tvNationalId"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/nationalid"
+                android:textColor="@color/_text_black_primary"
+                android:textSize="16sp"
+                android:elevation="1dp"
+                app:layout_constraintTop_toTopOf="@+id/ivNidIcon"
+                app:layout_constraintBottom_toBottomOf="@+id/ivNidIcon"
+                app:layout_constraintStart_toEndOf="@+id/ivNidIcon"
+                app:layout_constraintEnd_toEndOf="@+id/cardNationalId" />
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/groupLandlordOnly"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:visibility="gone"
+                app:constraint_referenced_ids="cardTotalUnits,ivUnitsIcon,tvTotalUnits" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardTotalUnits"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="12dp"
+                app:cardBackgroundColor="@color/card_background"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/text_black_primary"
+                app:strokeWidth="1dp"
                 app:layout_constraintTop_toBottomOf="@id/cardNationalId"
+                app:layout_constraintBottom_toBottomOf="@+id/ivUnitsIcon"
+                android:layout_marginBottom="-16dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:layout_constraintEnd_toEndOf="parent" />
 
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardTotalUnits"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    app:cardBackgroundColor="@color/card_background"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="0dp"
-                    app:strokeColor="@color/text_black_primary"
-                    app:strokeWidth="1dp"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent">
+            <ImageView
+                android:id="@+id/ivUnitsIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:src="@android:drawable/ic_input_add"
+                app:tint="@color/primary_blue"
+                android:elevation="1dp"
+                app:layout_constraintTop_toTopOf="@+id/cardTotalUnits"
+                app:layout_constraintStart_toStartOf="@+id/cardTotalUnits" />
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="16dp">
-
-                        <ImageView
-                            android:id="@+id/ivUnitsIcon"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@android:drawable/ic_input_add"
-                            app:tint="@color/primary_blue"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent" />
-
-                        <TextView
-                            android:id="@+id/tvTotalUnits"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:text="@string/totalUnits"
-                            android:textColor="@color/_text_black_primary"
-                            android:textSize="16sp"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toEndOf="@id/ivUnitsIcon"
-                            app:layout_constraintEnd_toEndOf="parent" />
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-                </com.google.android.material.card.MaterialCardView>
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/tvTotalUnits"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="@string/totalUnits"
+                android:textColor="@color/_text_black_primary"
+                android:textSize="16sp"
+                android:elevation="1dp"
+                app:layout_constraintTop_toTopOf="@+id/ivUnitsIcon"
+                app:layout_constraintBottom_toBottomOf="@+id/ivUnitsIcon"
+                app:layout_constraintStart_toEndOf="@+id/ivUnitsIcon"
+                app:layout_constraintEnd_toEndOf="@+id/cardTotalUnits" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnLogout"
@@ -315,7 +297,7 @@
                 android:textColor="@color/redLogOut"
                 app:cornerRadius="12dp"
                 app:strokeColor="@color/redlogOutStroke"
-                app:layout_constraintTop_toBottomOf="@id/layoutLandlordOnly"
+                app:layout_constraintTop_toBottomOf="@id/cardTotalUnits"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent" />

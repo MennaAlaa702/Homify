@@ -1,12 +1,13 @@
 package com.example.homify
 
-data class Property(
+data class property(
+    val id: Int = 0,
     val title: String,
     val price: String,
     val governorate: String,
     val address: String,
     val description: String,
-    val imageUrl: Int,
+    val imageUrl: String,
     val bedrooms: String,
     val bathrooms: String,
     val size: String,

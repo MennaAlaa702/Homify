@@ -5,6 +5,7 @@ import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -16,98 +17,110 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import com.google.android.material.card.MaterialCardView
+import androidx.activity.viewModels
+import data.viewmodel.UnitViewModel
+import data.viewmodel.ViewModelFactory
 
-class TenantHome : AppCompatActivity() {
+class tenantHome : AppCompatActivity() {
 
-    private lateinit var propertyAdapter: PropertyAdapter
-    private var fullList = listOf<Property>()
+    private lateinit var propertyAdapter: propertyAdapter
+    private var fullList = listOf<property>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.tenant_home)
+
+        // 1. تثبيت اتجاه الشاشة (من النسخة الأولى)
         requestedOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR
 
+        // ربط الـ Views الأساسية
         val btnFilter = findViewById<MaterialCardView>(R.id.btnFiltert)
         val recyclerView = findViewById<RecyclerView>(R.id.rvProperties)
         val tvUserWelcome = findViewById<TextView>(R.id.tvUserWelcome)
         val etSearch = findViewById<EditText>(R.id.searchtext)
-// هاتي الزرار من الـ App Bar المضمن
+
+        // المنيو وصورة البروفايل من الـ App Bar
         val btnMenu = findViewById<ImageButton>(R.id.btn_menu)
+        val appBar = findViewById<View>(R.id.my_app_bar)
+        val ivProfile = appBar?.findViewById<ImageView>(R.id.iv_profile) ?: findViewById<ImageView>(R.id.iv_profile)
 
-        btnMenu.setOnClickListener {
-            val sideMenu = SideMenuFragment()
-            sideMenu.show(supportFragmentManager, "SideMenuFragment")
-        }
-        // 1. اربطي صورة البروفايل من الـ App Bar
-        val ivProfile = findViewById<ImageView>(R.id.iv_profile)
+        // =========================================================================
+        //                         برمجة الـ Header (الترحيب والصورة)
+        // =========================================================================
 
-// 2. برمجى الانتقال لشاشة البروفايل عند الضغط عليها
-        ivProfile.setOnClickListener {
-            val intent = Intent(this, ProfileActivity::class.java)
-            startActivity(intent)
-        }
         val currentUserName = fetchUserNameFromSource()
         tvUserWelcome.text = "Hi $currentUserName !"
+
+        val sharedPref = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        val imagePath = sharedPref.getString("profile_image_path", null)
+        if (imagePath != null) {
+            val imgFile = java.io.File(imagePath)
+            if (imgFile.exists()) {
+                val bitmap = android.graphics.BitmapFactory.decodeFile(imgFile.absolutePath)
+                ivProfile.setImageBitmap(bitmap)
+            }
+        }
+
+        // الأزرار
+        btnMenu.setOnClickListener {
+            val sideMenu = sideMenuFragment()
+            sideMenu.show(supportFragmentManager, "SideMenuFragment")
+        }
+
+        ivProfile.setOnClickListener {
+            val intent = Intent(this, profileActivity::class.java)
+            startActivity(intent)
+        }
 
         btnFilter.setOnClickListener {
             showFilterOptions()
         }
 
-        fullList = listOf(
-            Property(
-                "The Green House",
-                "650",
-                "Leeds",
-                "Headingley, St 5",
-                "A cozy studio near the university with all amenities included.",
-                R.drawable.home3,
-                "1", "1", "50",
-                "Studio",
-                listOf("Gym", "Parking"),
-                "https://maps.google.com/?q=53.8197,-1.5776"
-            ),
-            Property(
-                "Urban Nest Apartment",
-                "1200",
-                "Cairo",
-                "Maadi, Road 9",
-                "Modern apartment with a great view and balcony.",
-                R.drawable.home2,
-                "2", "1", "110",
-                "Apartment",
-                listOf("WiFi", "Garden"),
-                "https://maps.google.com/?q=29.9602,31.2569"
-            ),
-            Property(
-                "Luxury Villa",
-                "5000",
-                "New Cairo",
-                "90th Street, Villa 12",
-                "Large villa with a private garden and swimming pool.",
-                R.drawable.home,
-                "4", "3", "350",
-                "Villa",
-                listOf("Pool", "Garden", "Parking"),
-                "https://maps.google.com/?q=30.0074,31.4913"
-            ),
-            Property(
-                "Shared Student Room",
-                "300",
-                "Alexandria",
-                "Sidi Gaber, Nile St",
-                "Affordable shared room for students, close to the library.",
-                R.drawable.kitchen,
-                "1", "1", "20",
-                "Shared Room",
-                listOf("WiFi", "Laundry"),
-                "https://maps.google.com/?q=31.2201,29.9426"
-            )
-        )
+        // =========================================================================
+        //                         إعداد الـ Database والـ RecyclerView
+        // =========================================================================
 
-        propertyAdapter = PropertyAdapter(fullList)
+        val db = (application as homifyApp).database
+        val factory = ViewModelFactory(
+            application = application,
+            unitDao = db.unitDao()
+        )
+        val unitViewModel: UnitViewModel by viewModels { factory }
+
+        // تهيئة الـ Adapter في البداية بـ List فاضية
+        propertyAdapter = propertyAdapter(emptyList())
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = propertyAdapter
+        // إيقاف السكرول المتداخل لو الشاشة فيها ScrollView أب
+        recyclerView.isNestedScrollingEnabled = false
+
+        // مراقبة الداتابيز الحقيقية وتحديث الـ UI
+        unitViewModel.allUnitsLatest.observe(this) { units ->
+            fullList = units.map { unit ->
+                property(
+                    id           = unit.id,
+                    title        = unit.title,
+                    price        = unit.price.toInt().toString(),
+                    governorate  = unit.governorate,
+                    address      = unit.address,
+                    description  = unit.description,
+                    imageUrl     = unit.images.split(",").firstOrNull() ?: "",
+                    bedrooms     = unit.bedrooms.toString(),
+                    bathrooms    = unit.bathrooms.toString(),
+                    size         = unit.size.toString(),
+                    type         = unit.unitType.name,
+                    amenities    = unit.amenities.split(",").map { it.trim() },
+                    locationLink = unit.locationLink
+                )
+            }
+            // إظهار الداتا على الشاشة
+            propertyAdapter.updateData(fullList)
+        }
+
+        // =========================================================================
+        //                         إعداد الـ Search والـ Chips (الفلاتر)
+        // =========================================================================
 
         etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -119,6 +132,27 @@ class TenantHome : AppCompatActivity() {
 
         setupChips()
     }
+
+    override fun onResume() {
+        super.onResume()
+        // تحديث الصورة لو اليوزر غيرها ورجع
+        val appBar = findViewById<View>(R.id.my_app_bar)
+        val ivProfile = appBar?.findViewById<ImageView>(R.id.iv_profile) ?: findViewById<ImageView>(R.id.iv_profile)
+        val sharedPref = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        val imagePath = sharedPref.getString("profile_image_path", null)
+
+        if (imagePath != null) {
+            val imgFile = java.io.File(imagePath)
+            if (imgFile.exists()) {
+                val bitmap = android.graphics.BitmapFactory.decodeFile(imgFile.absolutePath)
+                ivProfile?.setImageBitmap(bitmap)
+            }
+        }
+    }
+
+    // =========================================================================
+    //                            دوال مساعدة (Helpers)
+    // =========================================================================
 
     private fun fetchUserNameFromSource(): String {
         val sharedPref = getSharedPreferences("UserPrefs", MODE_PRIVATE)
@@ -148,7 +182,7 @@ class TenantHome : AppCompatActivity() {
 
         listPopupWindow.setAdapter(adapter)
         listPopupWindow.width = 600
-        listPopupWindow.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.menu_background))
+        listPopupWindow.setBackgroundDrawable(ContextCompat.getDrawable(this@tenantHome, R.drawable.menu_background))
 
         listPopupWindow.setOnItemClickListener { _, _, position, _ ->
             when (position) {
@@ -198,10 +232,13 @@ class TenantHome : AppCompatActivity() {
     }
 
     private fun filterPropertiesFromDB(type: String) {
-        if (type == "All") {
+        if (type == "All" || type.equals(getString(R.string.category_all), ignoreCase = true)) {
             propertyAdapter.updateData(fullList)
         } else {
-            val filtered = fullList.filter { it.type == type }
+            // بنفلتر هنا لو الكلمة موجودة في الـ type أو قريبة منها
+            val filtered = fullList.filter {
+                it.type.contains(type, ignoreCase = true) || type.contains(it.type, ignoreCase = true)
+            }
             propertyAdapter.updateData(filtered)
         }
     }

@@ -14,8 +14,8 @@
         </intent>
     </queries>
 
-
     <application
+        android:name=".homifyApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -26,37 +26,37 @@
         android:theme="@style/Theme.Homify">
 
         <activity
-            android:name=".TenantHome"
+            android:name=".tenantHome"
             android:exported="false" />
         <activity
-            android:name=".PropertyDetailsActivity"
+            android:name=".propertyDetailsActivity"
             android:exported="false" />
 
         <activity
-            android:name=".ProfileActivity"
+            android:name=".profileActivity"
             android:exported="false"
             android:theme="@style/Theme.Homify" />
         <activity
-            android:name=".AddUnitActivity"
+            android:name=".addUnitActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".LandlordHomeActivity"
+            android:name=".landlordHomeActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".loginActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".RegisterActivity"
+            android:name=".registerActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".OnboardingActivity"
+            android:name=".onboardingActivity"
             android:exported="false" />
 
         <activity
-            android:name=".SplashActivity"
+            android:name=".splashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -65,21 +65,18 @@
         </activity>
 
         <activity
-            android:name=".MainActivity"
-            android:exported="false" />
-        <activity
-            android:name=".DashboardActivity"
+            android:name=".dashboardActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ManageUsersActivity"
+            android:name=".manageUsersActivity"
             android:exported="false"
-            android:parentActivityName=".DashboardActivity"
+            android:parentActivityName=".dashboardActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ManageUnitsActivity"
+            android:name=".manageUnitsActivity"
             android:exported="false"
-            android:parentActivityName=".DashboardActivity"
+            android:parentActivityName=".dashboardActivity"
             android:screenOrientation="portrait" />
 
     </application>

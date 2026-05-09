@@ -75,7 +75,8 @@ class manageUnitsActivity : AppCompatActivity() {
                     name     = unit.title,
                     landlord = "Landlord #${unit.landlordId}",
                     details  = "${unit.governorate} • ${unit.size} m² • ${unit.unitType.name}",
-                    price    = "${unit.price.toInt()} EGP/mo"
+                    price    = "${unit.price.toInt()} EGP/mo",
+                    imagePath = unit.images.split(",").firstOrNull()?.trim()
                 )
             })
             adapter.notifyDataSetChanged() // تحديث الشاشة بعد جلب الداتا

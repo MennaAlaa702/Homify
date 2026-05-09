@@ -9,8 +9,10 @@ data class units(
     val landlord: String,
     val details: String,        // e.g. "Central District • 450 sqft • Fully Furnished"
     val price: String,          // e.g. "$1,200/mo"
-   // val status: UnitStatus,
+    // val status: UnitStatus,
+    val imagePath: String? = null,
     val imageResId: Int = android.R.drawable.ic_menu_gallery
+
 )
 
 /*enum class UnitStatus {

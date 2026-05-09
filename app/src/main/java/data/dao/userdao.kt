@@ -39,6 +39,11 @@ interface UserDao {
     @Query("DELETE FROM users WHERE user_id = :userId")
     suspend fun deleteUserById(userId: Int)
     // تحديث بيانات (زي تغيير الباسورد أو الاسم)
+
+
+    @Query("UPDATE users SET profile_image_path = :imagePath WHERE user_id = :userId")
+    suspend fun updateProfileImagePath(userId: Int, imagePath: String?)
+
     @Update
     suspend fun updateUser(user: User)
 
@@ -46,3 +51,4 @@ interface UserDao {
     @Delete
     suspend fun deleteUser(user: User)
 }
+

@@ -9,7 +9,7 @@ import android.view.View
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.Group // مهم جداً عشان ميديناش إيرور
+import androidx.constraintlayout.widget.Group
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import data.AppDatabase
@@ -24,37 +24,36 @@ class profileActivity : AppCompatActivity() {
     private lateinit var userViewModel: UserViewModel
     private lateinit var unitViewModel: UnitViewModel
 
-    // تعريف الـ Views كـ Global عشان نستخدمهم في الـ observation
     private lateinit var tvFullName: TextView
     private lateinit var tvEmail: TextView
     private lateinit var tvPhone: TextView
     private lateinit var tvNationalId: TextView
     private lateinit var tvTotalUnits: TextView
-
-    // 👇 ركزي هنا: رجعناها Group زي ما اتفقنا في تصميم الـ Flat Hierarchy
     private lateinit var groupLandlordOnly: Group
+
+    private var viewUserId: Int = -1
+    private var loggedInUserId: Int = -1
+    private var isViewingOtherUser: Boolean = false
 
     private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
             val savedPath = copyImageToInternalStorage(it)
             if (savedPath != null) {
                 saveImagePathToPrefs(savedPath)
-                loadImageFromPrefs()
+                userViewModel.updateProfileImage(loggedInUserId, savedPath)
+                loadMyProfileImage()
             }
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // 1. إعداد الثيم وتثبيت الشاشة
         setTheme(R.style.Theme_Homify)
         super.onCreate(savedInstanceState)
         requestedOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR
         setContentView(R.layout.activity_profile)
 
-        // 2. تعريف العناصر (Initialize Views)
         initializeViews()
 
-        // 3. إعداد الـ ViewModels والداتابيز
         val database = AppDatabase.getDatabase(this)
         val factory = ViewModelFactory(
             application = application,
@@ -65,19 +64,31 @@ class profileActivity : AppCompatActivity() {
         userViewModel = ViewModelProvider(this, factory)[UserViewModel::class.java]
         unitViewModel = ViewModelProvider(this, factory)[UnitViewModel::class.java]
 
-        // 4. جلب الـ ID من الـ Session ومراقبة البيانات الحقيقية
         val sharedPref = getSharedPreferences(getString(R.string.userprefs), Context.MODE_PRIVATE)
-        val userId = sharedPref.getInt(getString(R.string.userid), -1)
+        loggedInUserId = sharedPref.getInt(getString(R.string.userid), -1)
 
-        if (userId != -1) {
-            setupObservers(userId)
+        val intentViewUserId = intent.getIntExtra("VIEW_USER_ID", -1)
+        if (intentViewUserId != -1 && intentViewUserId != loggedInUserId) {
+            viewUserId = intentViewUserId
+            isViewingOtherUser = true
+        } else {
+            viewUserId = loggedInUserId
+            isViewingOtherUser = false
         }
 
-        // 5. برمجة الأزرار (Buttons Logic)
+        if (viewUserId != -1) {
+            setupObservers(viewUserId)
+        }
+
         setupButtons(sharedPref)
 
-        // تحميل الصورة
-        loadImageFromPrefs()
+        if (isViewingOtherUser) {
+            findViewById<FloatingActionButton>(R.id.fabEditPhoto).visibility = View.GONE
+            findViewById<Button>(R.id.btnLogout).visibility = View.GONE
+            loadOtherUserImage(viewUserId)
+        } else {
+            loadMyProfileImage()
+        }
     }
 
     private fun initializeViews() {
@@ -86,17 +97,15 @@ class profileActivity : AppCompatActivity() {
         tvPhone = findViewById(R.id.tvPhone)
         tvNationalId = findViewById(R.id.tvNationalId)
         tvTotalUnits = findViewById(R.id.tvTotalUnits)
-        groupLandlordOnly = findViewById(R.id.groupLandlordOnly) // استخدام الـ Group
+        groupLandlordOnly = findViewById(R.id.groupLandlordOnly)
     }
 
     private fun setupObservers(userId: Int) {
-        // مراقبة بيانات المستخدم الأساسية
         userViewModel.getUserData(userId).observe(this) { user ->
             user?.let {
                 tvFullName.text = "${it.firstName} ${it.lastName}"
                 tvEmail.text = it.email
 
-                // التحقق من الـ Role (بناءً على الـ Enum اللي عندك)
                 if (it.role.name.equals(getString(R.string.landlord), ignoreCase = true)) {
                     groupLandlordOnly.visibility = View.VISIBLE
                     updateUnitsCount(it.userId)
@@ -106,7 +115,6 @@ class profileActivity : AppCompatActivity() {
             }
         }
 
-        // جلب بروفايل Tenant
         userViewModel.getTenantProfile(userId).observe(this) { profile ->
             profile?.let {
                 tvPhone.text = it.phoneNumber
@@ -114,7 +122,6 @@ class profileActivity : AppCompatActivity() {
             }
         }
 
-        // جلب بروفايل Landlord (لو اليوزر Landlord الداتا هتيجي هنا)
         userViewModel.getLandlordProfile(userId).observe(this) { profile ->
             profile?.let {
                 tvPhone.text = it.phoneNumber
@@ -130,18 +137,18 @@ class profileActivity : AppCompatActivity() {
     }
 
     private fun setupButtons(sharedPref: android.content.SharedPreferences) {
-        // زرار المنيو الجانبي
         findViewById<ImageButton>(R.id.btn_open_menu).setOnClickListener {
             val sideMenu = sideMenuFragment()
             sideMenu.show(supportFragmentManager, getString(R.string.sidemenu))
         }
 
-        // تغيير الصورة
+        // ✅ زرار الصورة مرة واحدة بس
         findViewById<FloatingActionButton>(R.id.fabEditPhoto).setOnClickListener {
-            pickImageLauncher.launch("image/*")
+            if (!isViewingOtherUser) {
+                pickImageLauncher.launch("image/*")
+            }
         }
 
-        // تسجيل الخروج
         findViewById<Button>(R.id.btnLogout).setOnClickListener {
             sharedPref.edit().clear().apply()
             val intent = Intent(this, onboardingActivity::class.java)
@@ -153,7 +160,57 @@ class profileActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        loadImageFromPrefs()
+        if (!isViewingOtherUser) {
+            loadMyProfileImage()
+        }
+    }
+
+    // ✅ تحميل صورة نفسك — من SharedPrefs أو DB كـ fallback
+    private fun loadMyProfileImage() {
+        val ivProfileImage = findViewById<ImageView>(R.id.ivProfile)
+        val sharedPref = getSharedPreferences(getString(R.string.userprefs), Context.MODE_PRIVATE)
+        val localPath = sharedPref.getString(getString(R.string.profile_image_path), null)
+
+        if (localPath != null && File(localPath).exists()) {
+            loadProfileImage(localPath)
+        } else if (loggedInUserId != -1) {
+            // fallback من الـ DB
+            userViewModel.getUserData(loggedInUserId).observe(this) { user ->
+                val dbPath = user?.profileImagePath
+                if (dbPath != null && File(dbPath).exists()) {
+                    saveImagePathToPrefs(dbPath)
+                    loadProfileImage(dbPath)
+                } else {
+                    ivProfileImage.setImageResource(R.drawable.ic_default_profile)
+                }
+            }
+        } else {
+            ivProfileImage.setImageResource(R.drawable.ic_default_profile)
+        }
+    }
+
+    // ✅ تحميل صورة landlord من الـ DB
+    private fun loadOtherUserImage(userId: Int) {
+        val ivProfileImage = findViewById<ImageView>(R.id.ivProfile)
+        userViewModel.getUserData(userId).observe(this) { user ->
+            val dbPath = user?.profileImagePath
+            if (dbPath != null && File(dbPath).exists()) {
+                loadProfileImage(dbPath)
+            } else {
+                ivProfileImage.setImageResource(R.drawable.ic_default_profile)
+            }
+        }
+    }
+
+    private fun loadProfileImage(imagePath: String) {
+        val ivProfileImage = findViewById<ImageView>(R.id.ivProfile)
+        val imgFile = File(imagePath)
+        if (imgFile.exists()) {
+            val bitmap = BitmapFactory.decodeFile(imgFile.absolutePath)
+            ivProfileImage.setImageBitmap(bitmap)
+        } else {
+            ivProfileImage.setImageResource(R.drawable.ic_default_profile)
+        }
     }
 
     private fun copyImageToInternalStorage(uri: Uri): String? {
@@ -173,33 +230,8 @@ class profileActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadImageFromPrefs() {
-        // دعم لنسخة الـ Strings الأولى لو موجودة، أو نصوص مباشرة
-        val prefName = getString(R.string.userprefs).takeIf { it.isNotBlank() } ?: getString(R.string.userprefs)
-        val imageKey = getString(R.string.profile_image_path).takeIf { it.isNotBlank() } ?: getString(R.string.profile_image_path)
-
-        val sharedPref = getSharedPreferences(prefName, Context.MODE_PRIVATE)
-        val imagePath = sharedPref.getString(imageKey, null)
-        val ivProfileImage = findViewById<ImageView>(R.id.ivProfile)
-
-        if (imagePath != null) {
-            val imgFile = File(imagePath)
-            if (imgFile.exists()) {
-                val bitmap = BitmapFactory.decodeFile(imgFile.absolutePath)
-                ivProfileImage.setImageBitmap(bitmap)
-            } else {
-                ivProfileImage.setImageResource(R.drawable.ic_default_profile)
-            }
-        } else {
-            ivProfileImage.setImageResource(R.drawable.ic_default_profile)
-        }
-    }
-
     private fun saveImagePathToPrefs(path: String) {
-        val prefName = getString(R.string.userprefs).takeIf { it.isNotBlank() } ?: "UserPrefs"
-        val imageKey = getString(R.string.profile_image_path).takeIf { it.isNotBlank() } ?: "profile_image_path"
-
-        val sharedPref = getSharedPreferences(prefName, Context.MODE_PRIVATE)
-        sharedPref.edit().putString(imageKey, path).apply()
+        val sharedPref = getSharedPreferences(getString(R.string.userprefs), Context.MODE_PRIVATE)
+        sharedPref.edit().putString(getString(R.string.profile_image_path), path).apply()
     }
 }

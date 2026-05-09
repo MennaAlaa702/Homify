@@ -4,6 +4,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import java.util.concurrent.Executors
 import data.entities.User
@@ -14,7 +15,6 @@ import data.dao.UserDao
 import data.dao.ProfileDao
 import data.dao.UnitDao
 
-// 1. تحديد الجداول ونسخة قاعدة البيانات
 @Database(
     entities = [
         User::class,
@@ -22,21 +22,28 @@ import data.dao.UnitDao
         TenantProfile::class,
         Unit::class,
     ],
-    version = 1,
+    version = 2,          //  رفعنا الـ version من 1 إلى 2
     exportSchema = false
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
-    // 2. تعريف الـ DAOs للوصول للعمليات
     abstract fun userDao(): UserDao
     abstract fun profileDao(): ProfileDao
     abstract fun unitDao(): UnitDao
 
-
     companion object {
         @Volatile
         private var INSTANCE: AppDatabase? = null
+
+        //  Migration من version 1 إلى 2: بنضيف العمود الجديد
+        private val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL(
+                    "ALTER TABLE users ADD COLUMN profile_image_path TEXT"
+                )
+            }
+        }
 
         fun getDatabase(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
@@ -45,19 +52,18 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "homify_database"
                 )
+                    .addMigrations(MIGRATION_1_2)   // ✅ بدل fallbackToDestructiveMigration
                     .addCallback(object : RoomDatabase.Callback() {
                         override fun onCreate(db: SupportSQLiteDatabase) {
                             super.onCreate(db)
-                            // إضافة بيانات الأدمن عند إنشاء الداتابيز لأول مرة فقط
                             Executors.newSingleThreadExecutor().execute {
                                 db.execSQL("""
-    INSERT INTO users (first_name, last_name, email, national_id, password, role) 
-    VALUES ('Admin', 'User', 'admin@homify.com', '00000000000000', 'admin333', 'admin')
+    INSERT INTO users (first_name, last_name, email, national_id, password, role, profile_image_path) 
+    VALUES ('Admin', 'User', 'admin@homify.com', '00000000000000', 'admin333', 'admin', NULL)
 """.trimIndent())
                             }
                         }
                     })
-                    .fallbackToDestructiveMigration() // بيمسح الداتا لو غيرتي في الـ Schema (مفيد جداً وقت التطوير)
                     .build()
                 INSTANCE = instance
                 instance
@@ -65,4 +71,3 @@ abstract class AppDatabase : RoomDatabase() {
         }
     }
 }
-

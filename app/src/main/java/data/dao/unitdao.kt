@@ -29,11 +29,11 @@ interface UnitDao {
     @Query("SELECT COUNT(*) FROM units WHERE landlord_id = :lId")
     suspend fun getUnitCountForLandlord(lId: Int): Int
 
-//    @Query("SELECT COUNT(*) FROM units")
+    //    @Query("SELECT COUNT(*) FROM units")
 //    suspend fun getTotalUnitsCount(): Int
 // unitdao.kt
-@Query("SELECT COUNT(*) FROM units")
-fun getTotalUnitsCount(): Flow<Int>  // ← Flow مش suspend
+    @Query("SELECT COUNT(*) FROM units")
+    fun getTotalUnitsCount(): Flow<Int>  // ← Flow مش suspend
     @Query("SELECT * FROM units")
     fun getAllUnitsForAdmin(): Flow<List<Unit>>
 

@@ -20,4 +20,6 @@ data class User(
     val national_id: String,
     val role: UserRole,
     val password: String,
+    @ColumnInfo(name = "profile_image_path")
+    val profileImagePath: String? = null,
 )

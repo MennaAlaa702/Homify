@@ -25,6 +25,7 @@ import java.io.File
 class propertyDetailsActivity : AppCompatActivity() {
 
     private var isDarkMode = false
+    private var landlordUserId: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,13 +47,10 @@ class propertyDetailsActivity : AppCompatActivity() {
         // --- أزرار أساسية ---
         findViewById<ImageView>(R.id.btnBack).setOnClickListener { finish() }
 
-        findViewById<View>(R.id.bg_card_landlord).setOnClickListener {
-            val intent = Intent(this, profileActivity::class.java)
-            startActivity(intent)
-        }
+
 
         // --- جلب البيانات (Database أو Fallback) ---
-        val unitId = intent.getIntExtra("UNIT_ID", -1)
+        val unitId = intent.getIntExtra(getString(R.string.Unit_Id), -1)
 
         if (unitId != -1) {
             loadUnitDetails(unitId)
@@ -72,6 +70,14 @@ class propertyDetailsActivity : AppCompatActivity() {
                 findViewById<TextView>(R.id.tvDetailPrice).text = "${it.price} EGP"
                 findViewById<TextView>(R.id.tvDetailLocation).text = "${it.address}, ${it.governorate}"
                 findViewById<TextView>(R.id.tvDescription).text = it.description
+                landlordUserId = it.landlordId
+
+                // ✅ سجّل الـ click listener هنا بعد ما landlordUserId اتحدد
+                findViewById<View>(R.id.bg_card_landlord).setOnClickListener {
+                    val intent = Intent(this@propertyDetailsActivity, profileActivity::class.java)
+                    intent.putExtra("VIEW_USER_ID", landlordUserId)
+                    startActivity(intent)
+                }
 
                 // تحديث صناديق المميزات
                 setupFeatureBox(R.id.featureBed, R.drawable.bed, "${it.bedrooms} Bedroom")
@@ -80,6 +86,9 @@ class propertyDetailsActivity : AppCompatActivity() {
 
                 // إعداد الخريطة
                 setupMap(it.address, "https://maps.google.com/maps?q=${it.address.replace(" ", "+")}")
+
+                //  نحفظ الـ landlordId عشان الكارت يستخدمه
+                landlordUserId = it.landlordId
 
                 // جلب بيانات المالك والاتصال
                 val landlordProfile = database.profileDao().getLandlordByUserId(it.landlordId)

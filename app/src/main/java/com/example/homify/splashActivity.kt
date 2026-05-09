@@ -54,7 +54,21 @@ class splashActivity : AppCompatActivity() {
 
         // 3. الانتقال للشاشة التانية بعد ما الأنيميشن يخلص (800 + 2000 = 2800)
         Handler(Looper.getMainLooper()).postDelayed({
-            startActivity(Intent(this, onboardingActivity::class.java))
+            val sharedPref = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+            val userId = sharedPref.getInt("userId", -1)
+            val role = sharedPref.getString("role", null)
+
+            val intent = if (userId != -1 && role != null) {
+                when (role.lowercase()) {
+                    "landlord" -> Intent(this, landlordHomeActivity::class.java)
+                    "admin"    -> Intent(this, dashboardActivity::class.java)
+                    else       -> Intent(this, tenantHome::class.java)
+                }
+            } else {
+                Intent(this, onboardingActivity::class.java)
+            }
+
+            startActivity(intent)
             finish()
         }, 2800)
     }

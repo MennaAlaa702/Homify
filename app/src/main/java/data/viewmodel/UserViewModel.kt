@@ -51,4 +51,13 @@ class UserViewModel(
             userDao.deleteUser(user)
         }
     }
+
+    //  حفظ مسار الصورة في الـ DB
+
+    fun updateProfileImage(userId: Int, imagePath: String?) {
+        viewModelScope.launch {
+            userDao.updateProfileImagePath(userId, imagePath)
+        }
+    }
+
 }

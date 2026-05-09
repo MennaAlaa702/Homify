@@ -6,23 +6,18 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
+import java.io.File
 
-//import com.homify.app.models.UnitStatus
-
-/**
- * RecyclerView Adapter for displaying property units in ManageUnitsActivity.
- * Supports delete action per item.
- */
 class unitAdapter(
     private val units: MutableList<units>,
-    private val onDeleteClick: (units, Int) -> Any // غيري كلمة Unit الأخيرة لـ Any
+    private val onDeleteClick: (units, Int) -> Any
 ) : RecyclerView.Adapter<unitAdapter.UnitViewHolder>() {
 
     inner class UnitViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val ivImage: ImageView = itemView.findViewById(R.id.iv_unit_image)
         val tvPrice: TextView = itemView.findViewById(R.id.tv_unit_price)
-        //val tvStatus: TextView = itemView.findViewById(R.id.tv_unit_status)
         val tvName: TextView = itemView.findViewById(R.id.tv_unit_name)
         val tvLandlord: TextView = itemView.findViewById(R.id.tv_unit_landlord)
         val tvDetails: TextView = itemView.findViewById(R.id.tv_unit_details)
@@ -35,17 +30,31 @@ class unitAdapter(
         return UnitViewHolder(view)
     }
 
-
     override fun onBindViewHolder(holder: UnitViewHolder, position: Int) {
         val unit = units[position]
         val ctx = holder.itemView.context
 
-        holder.ivImage.setImageResource(unit.imageResId)
         holder.tvPrice.text = unit.price
         holder.tvName.text = unit.name
-        holder.tvLandlord.text = ctx.getString(R.string.manage_units_subtitle).let { "Landlord: ${unit.landlord}" }
         holder.tvLandlord.text = "Landlord: ${unit.landlord}"
         holder.tvDetails.text = unit.details
+
+        val imagePath = unit.imagePath
+        if (!imagePath.isNullOrEmpty()) {
+            val file = File(imagePath)
+            if (file.exists()) {
+                Glide.with(ctx)
+                    .load(file)
+                    .placeholder(android.R.drawable.ic_menu_gallery)
+                    .error(android.R.drawable.ic_menu_gallery)
+                    .centerCrop()
+                    .into(holder.ivImage)
+            } else {
+                holder.ivImage.setImageResource(android.R.drawable.ic_menu_gallery)
+            }
+        } else {
+            holder.ivImage.setImageResource(android.R.drawable.ic_menu_gallery)
+        }
 
         // Apply status styling
         /*when (unit.status) {
@@ -66,7 +75,7 @@ class unitAdapter(
             }
         }*/
 
-        // Delete triggers confirmation dialog in activity
+
         holder.btnDelete.setOnClickListener {
             onDeleteClick(unit, holder.adapterPosition)
         }
@@ -74,9 +83,6 @@ class unitAdapter(
 
     override fun getItemCount(): Int = units.size
 
-    /**
-     * Remove a unit from the list and notify the adapter.
-     */
     fun removeUnit(position: Int) {
         if (position >= 0 && position < units.size) {
             units.removeAt(position)

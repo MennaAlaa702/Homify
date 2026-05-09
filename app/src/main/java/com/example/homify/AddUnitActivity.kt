@@ -12,6 +12,12 @@ import data.entities.UnitType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import android.net.Uri
+import android.content.Intent
+import androidx.activity.result.contract.ActivityResultContracts
+import java.io.File
+import java.io.FileOutputStream
+
 
 class AddUnitActivity : AppCompatActivity() {
 
@@ -35,6 +41,19 @@ class AddUnitActivity : AppCompatActivity() {
     private lateinit var etLocation: EditText
     private lateinit var tvErrLocation: TextView
 
+    private val selectedImageUris = mutableListOf<Uri>()
+
+    private val pickImagesLauncher = registerForActivityResult(
+        ActivityResultContracts.GetMultipleContents()
+    ) { uris ->
+        if (uris.isNotEmpty()) {
+            selectedImageUris.clear()
+            selectedImageUris.addAll(uris)
+            // اعرض عدد الصور المختارة
+            findViewById<TextView>(R.id.tv_upload_desc)
+                .text = "${uris.size} image(s) selected"
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_unit)
@@ -45,6 +64,10 @@ class AddUnitActivity : AppCompatActivity() {
 
         findViewById<ImageButton>(R.id.btn_back).setOnClickListener { finish() }
         findViewById<Button>(R.id.btn_cancel).setOnClickListener { finish() }
+
+        findViewById<View>(R.id.v_upload_bg).setOnClickListener {
+            pickImagesLauncher.launch("image/*")
+        }
 
         findViewById<Button>(R.id.btn_save).setOnClickListener {
             if (validateForm()) {
@@ -59,6 +82,11 @@ class AddUnitActivity : AppCompatActivity() {
     private fun saveUnit() {
         val db      = (application as HomifyApp).database
         val unitDao = db.unitDao()
+
+        val savedImages = selectedImageUris.joinToString(",") {
+            copyImageToStorage(it) ?: ""
+        }.trim(',')  // ← بتشيل الفواصل الزيادة
+
 
         // جيب الـ landlordId من الـ Session
         val sharedPref  = getSharedPreferences("UserPrefs", MODE_PRIVATE)
@@ -93,7 +121,7 @@ class AddUnitActivity : AppCompatActivity() {
             bedrooms     = etBeds.text.toString().trim().toIntOrNull() ?: 0,
             bathrooms    = etBaths.text.toString().trim().toIntOrNull() ?: 0,
             size         = etSize.text.toString().trim().toIntOrNull() ?: 0,
-            images       = ""   // هنربط الصور لاحقاً
+            images = savedImages // هنربط الصور لاحقاً
         )
 
         lifecycleScope.launch(Dispatchers.IO) {
@@ -214,5 +242,20 @@ class AddUnitActivity : AppCompatActivity() {
         etGovernorate.addTextChangedListener(watcher)
         etAddress.addTextChangedListener(watcher)
         etLocation.addTextChangedListener(watcher)
+    }
+
+    private fun copyImageToStorage(uri: Uri): String? {
+        return try {
+            val fileName = "unit_${System.currentTimeMillis()}.jpg"
+            val file = File(filesDir, fileName)
+            contentResolver.openInputStream(uri)?.use { input ->
+                FileOutputStream(file).use { output ->
+                    input.copyTo(output)
+                }
+            }
+            file.absolutePath
+        } catch (e: Exception) {
+            null
+        }
     }
 }

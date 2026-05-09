@@ -12,8 +12,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
 import kotlinx.coroutines.launch
 import data.AppDatabase
+import java.io.File
+
 
 class PropertyDetailsActivity : AppCompatActivity() {
 
@@ -74,6 +77,19 @@ class PropertyDetailsActivity : AppCompatActivity() {
                 // اعرضي اسم المالك
                 val landlordName = "${landlordProfile?.firstName} ${landlordProfile?.lastName}"
                 findViewById<TextView>(R.id.tvLandlordName).text = landlordName
+
+                val firstImage = it.images.split(",").firstOrNull()?.trim() ?: ""
+                val imageView = findViewById<ImageView>(R.id.ivDetailImage)
+                if (firstImage.isNotEmpty()) {
+                    val file = java.io.File(firstImage)
+                    if (file.exists()) {
+                        Glide.with(this@PropertyDetailsActivity).load(file).into(imageView)
+                    } else {
+                        imageView.setImageResource(R.drawable.home3)
+                    }
+                } else {
+                    imageView.setImageResource(R.drawable.home3)
+                }
             }
         }
 
@@ -127,9 +143,16 @@ class PropertyDetailsActivity : AppCompatActivity() {
     }
 
     private fun loadFromIntentFallback() {
-        // الكود القديم بتاعك كـ Backup لو مفيش ID
         val title = intent.getStringExtra("TITLE") ?: "Property"
         findViewById<TextView>(R.id.tvDetailTitle).text = title
-        // ... وهكذا لباقي العناصر
+
+        val imagePath = intent.getStringExtra("IMAGE") ?: ""
+        val imageView = findViewById<ImageView>(R.id.ivDetailImage)
+        val file = File(imagePath)
+        if (file.exists()) {
+            Glide.with(this).load(file).into(imageView)
+        } else {
+            imageView.setImageResource(R.drawable.home3)
+        }
     }
 }

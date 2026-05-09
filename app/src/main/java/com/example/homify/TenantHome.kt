@@ -5,6 +5,7 @@ import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -42,8 +43,18 @@ class TenantHome : AppCompatActivity() {
             sideMenu.show(supportFragmentManager, "SideMenuFragment")
         }
         // 1. اربطي صورة البروفايل من الـ App Bar
+        val appBar = findViewById<View>(R.id.my_app_bar)
         val ivProfile = findViewById<ImageView>(R.id.iv_profile)
 
+        val sharedPref = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        val imagePath = sharedPref.getString("profile_image_path", null)
+        if (imagePath != null) {
+            val imgFile = java.io.File(imagePath)
+            if (imgFile.exists()) {
+                val bitmap = android.graphics.BitmapFactory.decodeFile(imgFile.absolutePath)
+                ivProfile.setImageBitmap(bitmap)
+            }
+        }
 // 2. برمجى الانتقال لشاشة البروفايل عند الضغط عليها
         ivProfile.setOnClickListener {
             val intent = Intent(this, ProfileActivity::class.java)
@@ -64,6 +75,12 @@ class TenantHome : AppCompatActivity() {
         )
         val unitViewModel: UnitViewModel by viewModels { factory }
 
+        // الـ adapter الأول
+        propertyAdapter = PropertyAdapter(emptyList())
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = propertyAdapter
+
+// بعدين الـ observe
         unitViewModel.allUnitsLatest.observe(this) { units ->
             fullList = units.map { unit ->
                 Property(
@@ -73,7 +90,7 @@ class TenantHome : AppCompatActivity() {
                     governorate  = unit.governorate,
                     address      = unit.address,
                     description  = unit.description,
-                    imageUrl     = R.drawable.home,
+                    imageUrl     = unit.images.split(",").firstOrNull() ?: "",
                     bedrooms     = unit.bedrooms.toString(),
                     bathrooms    = unit.bathrooms.toString(),
                     size         = unit.size.toString(),
@@ -84,10 +101,6 @@ class TenantHome : AppCompatActivity() {
             }
             propertyAdapter.updateData(fullList)
         }
-
-        propertyAdapter = PropertyAdapter(fullList)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = propertyAdapter
 
         etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -102,6 +115,20 @@ class TenantHome : AppCompatActivity() {
         // كود الdb
     }
 
+    override fun onResume() {
+        super.onResume()
+        val appBar = findViewById<View>(R.id.my_app_bar)
+        val ivProfile = appBar.findViewById<ImageView>(R.id.iv_profile)
+        val sharedPref = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        val imagePath = sharedPref.getString("profile_image_path", null)
+        if (imagePath != null) {
+            val imgFile = java.io.File(imagePath)
+            if (imgFile.exists()) {
+                val bitmap = android.graphics.BitmapFactory.decodeFile(imgFile.absolutePath)
+                ivProfile.setImageBitmap(bitmap)
+            }
+        }
+    }
     private fun fetchUserNameFromSource(): String {
         val sharedPref = getSharedPreferences("UserPrefs", MODE_PRIVATE)
         return sharedPref.getString("username", "Guest") ?: "Guest"

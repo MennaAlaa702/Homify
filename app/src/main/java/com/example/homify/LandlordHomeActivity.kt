@@ -2,6 +2,7 @@ package com.example.homify
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
@@ -11,7 +12,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import androidx.activity.viewModels
 import data.viewmodel.UnitViewModel
 import data.viewmodel.ViewModelFactory
-
+import android.widget.TextView
 class LandlordHomeActivity : AppCompatActivity() {
 
     private lateinit var propertyAdapter: PropertyAdapter
@@ -24,11 +25,22 @@ class LandlordHomeActivity : AppCompatActivity() {
         val btnMenu  = findViewById<ImageButton>(R.id.btn_menu)
         val rvUnits  = findViewById<RecyclerView>(R.id.rv_landlord_units)
         val fabAdd   = findViewById<FloatingActionButton>(R.id.fab_add)
+        val appBar = findViewById<View>(R.id.my_app_bar)
         val ivProfile = findViewById<ImageView>(R.id.iv_profile)
 
-        // جلب الـ landlordId من الـ Session
-        val sharedPref  = getSharedPreferences("UserPrefs", MODE_PRIVATE)
-        val landlordId  = sharedPref.getInt("userId", -1)
+        // جلب الـ Session
+        val sharedPref = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        val landlordId = sharedPref.getInt("userId", -1)
+
+// تحميل صورة البروفايل
+        val imagePath = sharedPref.getString("profile_image_path", null)
+        if (imagePath != null) {
+            val imgFile = java.io.File(imagePath)
+            if (imgFile.exists()) {
+                val bitmap = android.graphics.BitmapFactory.decodeFile(imgFile.absolutePath)
+                ivProfile.setImageBitmap(bitmap)
+            }
+        }
 
         // إعداد الـ DB والـ ViewModel
         val db      = (application as HomifyApp).database
@@ -43,8 +55,22 @@ class LandlordHomeActivity : AppCompatActivity() {
         rvUnits.layoutManager = LinearLayoutManager(this)
         rvUnits.adapter       = propertyAdapter
 
-        // ✅ مراقبة التغييرات من DB وتحديث الـ adapter
+        // ربط الـ TextViews
+        val tvTotal  = findViewById<TextView>(R.id.tv_total_val)
+        val tvAvail  = findViewById<TextView>(R.id.tv_avail_val)
+        val tvRented = findViewById<TextView>(R.id.tv_rented_val)
+
         unitViewModel.getLandlordUnits(landlordId).observe(this) { units ->
+            // الأرقام
+            val total  = units.size
+            val rented = "1"
+            val avail  = units.size
+
+            tvTotal.text  = total.toString()
+            tvRented.text = rented.toString()
+            tvAvail.text  = avail.toString()
+
+            // الـ properties
             val properties = units.map { unit ->
                 Property(
                     id           = unit.id,
@@ -53,7 +79,7 @@ class LandlordHomeActivity : AppCompatActivity() {
                     governorate  = unit.governorate,
                     address      = unit.address,
                     description  = unit.description,
-                    imageUrl     = R.drawable.home,
+                    imageUrl     = unit.images.split(",").firstOrNull() ?: "",
                     bedrooms     = unit.bedrooms.toString(),
                     bathrooms    = unit.bathrooms.toString(),
                     size         = unit.size.toString(),
@@ -79,6 +105,21 @@ class LandlordHomeActivity : AppCompatActivity() {
         // صورة البروفايل
         ivProfile.setOnClickListener {
             startActivity(Intent(this, ProfileActivity::class.java))
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val appBar = findViewById<View>(R.id.my_app_bar)
+        val ivProfile = appBar.findViewById<ImageView>(R.id.iv_profile)
+        val sharedPref = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        val imagePath = sharedPref.getString("profile_image_path", null)
+        if (imagePath != null) {
+            val imgFile = java.io.File(imagePath)
+            if (imgFile.exists()) {
+                val bitmap = android.graphics.BitmapFactory.decodeFile(imgFile.absolutePath)
+                ivProfile.setImageBitmap(bitmap)
+            }
         }
     }
 }

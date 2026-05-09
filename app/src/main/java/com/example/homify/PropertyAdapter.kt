@@ -9,7 +9,9 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
+import java.io.File
 
 class PropertyAdapter(private var propertyList: List<Property>) :
     RecyclerView.Adapter<PropertyAdapter.PropertyViewHolder>() {
@@ -34,7 +36,23 @@ class PropertyAdapter(private var propertyList: List<Property>) :
         holder.title.text = property.title
         holder.price.text = "${property.price} EGP"
         holder.location.text = "${property.governorate}, ${property.address}"
-        holder.propertyImage.setImageResource(property.imageUrl)
+        //holder.propertyImage.setImageResource(property.imageUrl)
+        val firstImage = property.imageUrl.split(",").firstOrNull()?.trim() ?: ""
+
+        if (firstImage.isNotEmpty()) {
+            val file = File(firstImage)
+            if (file.exists()) {
+                Glide.with(holder.itemView.context)
+                    .load(file)
+                    .placeholder(R.drawable.home)
+                    .error(R.drawable.home)  // ← أضيفي السطر ده
+                    .into(holder.propertyImage)
+            } else {
+                holder.propertyImage.setImageResource(R.drawable.home)
+            }
+        } else {
+            holder.propertyImage.setImageResource(R.drawable.home)
+        }
         holder.unitType.text = property.type
 
         holder.amenitiesContainer.removeAllViews()

@@ -7,7 +7,7 @@ data class Property(
     val governorate: String,
     val address: String,
     val description: String,
-    val imageUrl: Int,
+    val imageUrl: String,
     val bedrooms: String,
     val bathrooms: String,
     val size: String,

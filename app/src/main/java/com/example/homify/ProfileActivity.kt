@@ -105,8 +105,16 @@ class ProfileActivity : AppCompatActivity() {
             }
         }
 
-        // مراقبة بروفايل المستأجر (Phone, National ID)
+        // جلب بروفايل Tenant
         userViewModel.getTenantProfile(userId).observe(this) { profile ->
+            profile?.let {
+                tvPhone.text = it.phoneNumber
+                tvNationalId.text = it.nationalId
+            }
+        }
+
+// جلب بروفايل Landlord
+        userViewModel.getLandlordProfile(userId).observe(this) { profile ->
             profile?.let {
                 tvPhone.text = it.phoneNumber
                 tvNationalId.text = it.nationalId

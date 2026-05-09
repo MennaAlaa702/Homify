@@ -39,36 +39,57 @@ class propertyAdapter(private var propertyList: List<property>) :
         holder.location.text = "${property.governorate}, ${property.address}"
         holder.unitType.text = property.type
 
-        // 2. معالجة وتحميل الصورة باستخدام Glide
+        // 2. ✅ تحميل الصورة — بيدعم روابط الإنترنت والملفات المحلية
         val firstImage = property.imageUrl.split(",").firstOrNull()?.trim() ?: ""
 
-        if (firstImage.isNotEmpty()) {
-            val file = File(firstImage)
-            if (file.exists()) {
+        when {
+            // drawable من الـ resources (drawable://home2 مثلاً)
+            firstImage.startsWith("drawable://") -> {
+                val drawableName = firstImage.removePrefix("drawable://")
+                val resId = holder.itemView.context.resources.getIdentifier(
+                    drawableName, "drawable", holder.itemView.context.packageName
+                )
+                if (resId != 0) {
+                    holder.propertyImage.setImageResource(resId)
+                } else {
+                    holder.propertyImage.setImageResource(R.drawable.home)
+                }
+            }
+            // رابط إنترنت (http أو https)
+            firstImage.startsWith("http") -> {
                 Glide.with(holder.itemView.context)
-                    .load(file)
+                    .load(firstImage)
                     .placeholder(R.drawable.home)
                     .error(R.drawable.home)
+                    .centerCrop()
                     .into(holder.propertyImage)
-            } else {
+            }
+            // ملف محلي على الجهاز
+            firstImage.isNotEmpty() && File(firstImage).exists() -> {
+                Glide.with(holder.itemView.context)
+                    .load(File(firstImage))
+                    .placeholder(R.drawable.home)
+                    .error(R.drawable.home)
+                    .centerCrop()
+                    .into(holder.propertyImage)
+            }
+            // fallback: صورة افتراضية
+            else -> {
                 holder.propertyImage.setImageResource(R.drawable.home)
             }
-        } else {
-            holder.propertyImage.setImageResource(R.drawable.home)
         }
 
         // 3. رسم الـ Amenities ديناميكياً
         holder.amenitiesContainer.removeAllViews()
-        // هنجيب الـ context من العنصر اللي ماسكه الـ holder
         val context = holder.itemView.context
         property.amenities.forEach { amenity ->
             val iconRes = when (amenity) {
-                context.getString(R.string.wifi) -> R.drawable.internet
-                context.getString(R.string.parking) -> R.drawable.parking
-                context.getString(R.string.gym) -> R.drawable.gym
-                context.getString(R.string.laundry) -> R.drawable.laundry
-                context.getString(R.string.pool) -> R.drawable.pool
-                context.getString(R.string.garden) -> R.drawable.garden
+                context.getString(R.string.wifi)     -> R.drawable.internet
+                context.getString(R.string.parking)  -> R.drawable.parking
+                context.getString(R.string.gym)      -> R.drawable.gym
+                context.getString(R.string.laundry)  -> R.drawable.laundry
+                context.getString(R.string.pool)     -> R.drawable.pool
+                context.getString(R.string.garden)   -> R.drawable.garden
                 else -> null
             }
 
@@ -97,7 +118,7 @@ class propertyAdapter(private var propertyList: List<property>) :
         holder.itemView.setOnClickListener {
             val context = holder.itemView.context
             val intent = Intent(context, propertyDetailsActivity::class.java).apply {
-                putExtra(context.getString(R.string.Unit_Id), property.id) // تم الدمج بنجاح
+                putExtra(context.getString(R.string.Unit_Id), property.id)
                 putExtra(context.getString(R.string.TITLE), property.title)
                 putExtra(context.getString(R.string.PRICE), property.price)
                 putExtra(context.getString(R.string.GOVERNORATE), property.governorate)

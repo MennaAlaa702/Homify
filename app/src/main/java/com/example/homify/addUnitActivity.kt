@@ -66,7 +66,7 @@ class addUnitActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btn_cancel).setOnClickListener { finish() }
 
         findViewById<View>(R.id.v_upload_bg).setOnClickListener {
-            pickImagesLauncher.launch("image/*")
+            pickImagesLauncher.launch(getString(R.string.image_as))
         }
 
         findViewById<Button>(R.id.btn_save).setOnClickListener {

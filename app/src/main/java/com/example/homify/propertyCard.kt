@@ -29,18 +29,23 @@ class propertyCard @JvmOverloads constructor(
         unitTypeChip = findViewById(R.id.unitType)
     }
 
-    fun setPropertyData(name: String, price: String, location: String, imageUrl: Int, type: String) {
+    // تغيير Int إلى String في الباراميتر الرابع
+    fun setPropertyData(name: String, price: String, location: String, imageUrl: String, type: String) {
         propertyName?.text = name
-        propertyPrice?.text = "$$price/mo"
+        propertyPrice?.text = "$price EGP" // غيرنا العلامة لـ EGP لتناسب بياناتك
         propertyLocation?.text = location
         unitTypeChip?.text = type
 
         propertyImage?.let { view ->
-            Glide.with(context)
-                .load(imageUrl)
-                .placeholder(android.R.drawable.progress_horizontal)
-                .error(android.R.drawable.stat_notify_error)
-                .into(view)
+            if (imageUrl.isNotEmpty()) {
+                Glide.with(context)
+                    .load(imageUrl) // Glide سيفهم تلقائياً إذا كان رابط URL أو مسار ملف
+                    .placeholder(R.drawable.home3) // صورة مؤقتة أثناء التحميل
+                    .error(R.drawable.home3)       // صورة في حال حدوث خطأ
+                    .into(view)
+            } else {
+                view.setImageResource(R.drawable.home3)
+            }
         }
     }
 }

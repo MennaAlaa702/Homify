@@ -1,6 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="#FFF5F5"/> <!-- لون أحمر فاتح جداً للخلفية -->
-    <stroke android:width="1dp" android:color="#E53935"/> <!-- بوردر أحمر -->
-    <corners android:radius="12dp"/>
-</shape>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_focused="true">
+        <shape>
+            <solid android:color="@color/card_background"/>
+            <stroke android:width="2dp" android:color="#E53935"/>
+            <corners android:radius="12dp"/>
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <solid android:color="@color/card_background"/>
+            <stroke android:width="1.5dp" android:color="#E53935"/>
+            <corners android:radius="12dp"/>
+        </shape>
+    </item>
+</selector>

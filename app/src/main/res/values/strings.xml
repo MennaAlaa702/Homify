@@ -10,11 +10,10 @@
     <string name="get_started">Get Started →</string>
     <string name="login">Login</string>
     <string name="guest_view">Guest View</string>
-
     <string name="premium_studios">Premium Studios</string>
     <string name="location">Central Campus Area</string>
     <string name="price">$450/mo</string>
-    <!-- Register Screen -->
+    <!--  Register Screen  -->
     <string name="join_us">Join Us</string>
     <string name="register_title">Find your perfect home.</string>
     <string name="register_subtitle">Stress-free housing discovery for students\nand professionals.</string>
@@ -31,8 +30,7 @@
     <string name="create_account">Create Account →</string>
     <string name="already_have_account">Already have an account? Log In</string>
     <string name="back_button">Back</string>
-
-    <!-- Labels for Register Form -->
+    <!--  Labels for Register Form  -->
     <string name="label_first_name">First Name</string>
     <string name="label_last_name">Last Name</string>
     <string name="label_email">Email Address</string>
@@ -40,8 +38,7 @@
     <string name="label_role">I am a...</string>
     <string name="label_password">Password</string>
     <string name="label_confirm_password">Confirm Password</string>
-
-    <!-- Validation Errors -->
+    <!--  Validation Errors  -->
     <string name="err_first_name_req">First Name is required!</string>
     <string name="err_last_name_req">Last Name is required!</string>
     <string name="err_email_invalid">Please use a valid email</string>
@@ -51,34 +48,28 @@
     <string name="err_pass_req">Password is required!</string>
     <string name="err_confirm_pass_req">Confirm password is required!</string>
     <string name="err_pass_match">Confirm password must match password</string>
-
-    <!-- Login Screen -->
+    <!--  Login Screen  -->
     <string name="login_tagline">Find your home away from home.</string>
     <string name="forgot_password">Forgot Password?</string>
     <string name="login_btn_text">Login</string>
     <string name="dont_have_account">Don\'t have an account? Register Now</string>
     <string name="back_to_register">Back to Register</string>
-
-    <!-- Add Unit Screen -->
+    <!--  Add Unit Screen  -->
     <string name="add_unit_title">Add New Unit</string>
     <string name="add_unit_subtitle">Fill in the details to list your property and help students find their next home.</string>
-
     <string name="section_unit_details">Unit Details</string>
     <string name="section_specifications">Specifications</string>
     <string name="section_location">Location</string>
     <string name="section_media">Media</string>
-
     <string name="err_field_req">This field is required</string>
-
-    <!-- Categories from Noureen -->
+    <!--  Categories from Noureen  -->
     <string name="category_all">All</string>
     <string name="category_near_uni">Near Uni</string>
     <string name="category_studio">Studio</string>
     <string name="category_villa">Villa</string>
     <string name="category_apartment">Apartment</string>
     <string name="category_shared">Shared Room</string>
-
-    <!-- Labels -->
+    <!--  Labels  -->
     <string name="label_size">Size (m²)</string>
     <string name="label_amenities">Amenities</string>
     <string name="label_governorate">Governorate</string>
@@ -119,7 +110,7 @@
     <string name="profile">Profile</string>
     <string name="home">Home</string>
     <string name="user_name">Menna Alaa</string>
-    <!--  Dashboard Activity  -->
+    <!--   Dashboard Activity   -->
     <string name="dashboard_title">Dashboard Overview</string>
     <string name="dashboard_subtitle">Manage and monitor Homify ecosystem metrics.</string>
     <string name="total_users_label">TOTAL USERS</string>
@@ -158,7 +149,7 @@
     <string name="nav_search">Search</string>
     <string name="nav_saved">Saved</string>
     <string name="nav_profile">Profile</string>
-    <!--  Manage Users Activity  -->
+    <!--   Manage Users Activity   -->
     <string name="manage_users_title">Manage Users</string>
     <string name="manage_users_subtitle">Overview of all platform tenants and administrators.</string>
     <string name="btn_add_new_user">Add New User</string>
@@ -178,7 +169,7 @@
     <string name="toast_user_deleted">User deleted successfully</string>
     <string name="toast_unit_deleted">Unit deleted successfully</string>
     <string name="toast_user_added">User added successfully</string>
-    <!--  Manage Units Activity  -->
+    <!--   Manage Units Activity   -->
     <string name="manage_units_title">Manage Units</string>
     <string name="manage_units_subtitle">Review, edit, and approve pending property listings.</string>
     <string name="total_units_count">TOTAL UNITS</string>
@@ -192,10 +183,10 @@
     <string name="status_pending">PENDING APPROVAL</string>
     <string name="status_active">ACTIVE</string>
     <string name="status_draft">DRAFT</string>
-    <!--  Menu  -->
+    <!--   Menu   -->
     <string name="menu_search">Search</string>
     <string name="menu_settings">Settings</string>
-    <!--  Settings  -->
+    <!--   Settings   -->
     <string name="settings_title">Settings</string>
     <string name="settings_coming_soon">Settings coming soon…</string>
     <string name="quick_search">Quick Search</string>
@@ -204,7 +195,6 @@
     <string name="todo">TODO</string>
     <string name="todo1">TODO</string>
     <string name="todo2">TODO</string>
-
     <string name="welcome_hi">Hi!</string>
     <string name="search_hint">Search by area, uni or street</string>
     <string name="featured_spots">Featured Spots</string>
@@ -222,7 +212,6 @@
     <string name="price_high_to_low">Price: High to Low</string>
     <string name="price_low_to_high">Price: Low to High</string>
     <string name="location_a_z">Location (A-Z)</string>
-
     <string name="username">username</string>
     <string name="bio">bio</string>
     <string name="personal_details">Personal Details</string>
@@ -313,4 +302,64 @@
     <string name="map_link">MAP_LINK</string>
     <string name="AMENITIES">AMENITIES</string>
     <string name="type">Type</string>
+    <string name="db_name">homify_database_v3</string>
+    <string name="seed_admin_last_name">User</string>
+    <string name="seed_admin_nid">00000000000000</string>
+    <string name="seed_admin_pass">admin333</string>
+    <string name="role_admin_lower">admin</string>
+    <string name="seed_landlord_first_name">Landlord</string>
+    <string name="seed_landlord_last_name">Profile</string>
+    <string name="seed_landlord_email">ahmed.landlord@homify.com</string>
+    <string name="seed_landlord_nid">12345678901234</string>
+    <string name="seed_landlord_pass">Landlord@123</string>
+    <string name="role_landlord_lower">landlord</string>
+    <string name="seed_landlord_phone">01012345678</string>
+    <string name="gov_cairo">Cairo</string>
+    <string name="gov_giza">Giza</string>
+    <string name="gov_alexandria">Alexandria</string>
+    <string name="gov_mansoura">Mansoura</string>
+    <string name="seed_map_link">https://maps.google.com</string>
+    <string name="amenities_wifi_parking">WiFi,Parking</string>
+    <string name="amenities_villa">WiFi,Parking,Pool,Gym</string>
+    <string name="amenities_apt">WiFi,Parking,Gym</string>
+    <string name="amenities_laundry">WiFi,Laundry</string>
+    <string name="unit_type_shared_room">Shared_Room</string>
+    <string name="unit_type_near_uni">Near_Uni</string>
+    <string name="seed_unit1_title">Cozy Studio Near University</string>
+    <string name="seed_unit1_desc">A modern studio apartment close to the university.</string>
+    <string name="seed_unit1_address">15 Tahrir St, Dokki</string>
+    <string name="seed_unit2_title">Luxury Villa with Pool</string>
+    <string name="seed_unit2_desc">Spacious villa with private pool and garden.</string>
+    <string name="seed_unit2_address">7 Pyramids Rd, Haram</string>
+    <string name="seed_unit3_title">Shared Room Downtown</string>
+    <string name="seed_unit3_desc">Affordable shared room in the heart of the city.</string>
+    <string name="seed_unit3_address">22 Corniche St</string>
+    <string name="seed_unit4_title">Modern Apartment</string>
+    <string name="seed_unit4_desc">Fully furnished apartment with city view.</string>
+    <string name="seed_unit4_address">5 Nasr City, Block 3</string>
+    <string name="seed_unit5_title">Near Uni Room</string>
+    <string name="seed_unit5_desc">Perfect for students, 5 minutes walk from university.</string>
+    <string name="seed_unit5_address">10 University St</string>
+    <string name="seed_drawable_home">drawable://home</string>
+    <string name="seed_drawable_home2">drawable://home2</string>
+    <string name="seed_drawable_home3">drawable://home3</string>
+    <string name="seed_admin_first_name">Admin</string>
+    <string name="unit_type_studio">Studio</string>
+    <string name="unit_type_villa">Villa</string>
+    <string name="alter_table">ALTER TABLE users ADD COLUMN profile_image_path TEXT</string>
+    <string name="sql_insert_user_template">INSERT OR IGNORE INTO users (first_name, last_name, email, national_id, password, role, profile_image_path) VALUES (\'%1$s\', \'%2$s\', \'%3$s\', \'%4$s\', \'%5$s\', \'%6$s\', NULL)</string>
+    <string name="sql_insert_landlord_profile_template">INSERT OR IGNORE INTO landlord_profiles (user_id, first_name, last_name, national_id, email, phone_number) SELECT user_id, first_name, last_name, national_id, email, \'%1$s\' FROM users WHERE email = \'%2$s\'</string>
+    <string name="sql_unit_select_row_template">SELECT \'%1$s\' AS title, \'%2$s\' AS description, \'%3$s\' AS governorate, \'%4$s\' AS address, \'%5$s\' AS location_link, %6$.1f AS price, \'%7$s\' AS unit_type, \'%8$s\' AS amenities, %9$d AS bedrooms, %10$d AS bathrooms, %11$d AS size, \'%12$s\' AS images</string>
+    <string name="sql_insert_units_from_view_template">INSERT OR IGNORE INTO units (landlord_id, title, description, governorate, address, location_link, price, unit_type, amenities, bedrooms, bathrooms, size, images) SELECT u.user_id, v.* FROM users u, (%1$s) AS v WHERE u.email = \'%2$s\'</string>
+    <string name="landlord_Hash">Landlord #%1$d</string>
+    <string name="egp_mo">%1$d EGP/mo</string>
+    <string name="image_as">image/*</string>
+    <string name="profile_picture_jpg">profile_picture.jpg</string>
+    <string name="view_user_id">VIEW_USER_ID</string>
+    <string name="the_green_house">The Green House</string>
+    <string name="_650">650</string>
+    <string name="shalaby_st_10">Shalaby, St 10</string>
+    <string name="a_cozy_studio">A cozy studio near the university...</string>
+    <string name="https_maps_google_com">https://maps.google.com</string>
+    <string name="area">AREA</string>
 </resources>

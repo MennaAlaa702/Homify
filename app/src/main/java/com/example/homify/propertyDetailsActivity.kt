@@ -32,30 +32,49 @@ class propertyDetailsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_property_details)
         requestedOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR
 
-
-        // --- تحديد وتطبيق المود (Dark/Light) ---
         isDarkMode = (resources.configuration.uiMode and
                 android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
                 android.content.res.Configuration.UI_MODE_NIGHT_YES
 
-        if (isDarkMode) {
-            applyDarkModeProgrammatically()
-        } else {
-            applyLightModeSettings()
-        }
+        if (isDarkMode) applyDarkModeProgrammatically() else applyLightModeSettings()
 
-        // --- أزرار أساسية ---
         findViewById<ImageView>(R.id.btnBack).setOnClickListener { finish() }
 
-
-
-        // --- جلب البيانات (Database أو Fallback) ---
         val unitId = intent.getIntExtra(getString(R.string.Unit_Id), -1)
+        if (unitId != -1) loadUnitDetails(unitId) else loadFromIntentFallback()
+    }
 
-        if (unitId != -1) {
-            loadUnitDetails(unitId)
-        } else {
-            loadFromIntentFallback()
+    // ════════════════════════════════════════════
+    //  دالة مشتركة لتحميل الصورة (drawable / http / file)
+    // ════════════════════════════════════════════
+    private fun loadImage(imagePath: String, imageView: ImageView) {
+        val firstImage = imagePath.split(",").firstOrNull()?.trim() ?: ""
+        when {
+            // drawable من الـ resources (drawable://home2 مثلاً)
+            firstImage.startsWith("drawable://") -> {
+                val drawableName = firstImage.removePrefix("drawable://")
+                val resId = resources.getIdentifier(drawableName, "drawable", packageName)
+                imageView.setImageResource(if (resId != 0) resId else R.drawable.home3)
+            }
+            // رابط إنترنت
+            firstImage.startsWith("http") -> {
+                Glide.with(this)
+                    .load(firstImage)
+                    .placeholder(R.drawable.home3)
+                    .error(R.drawable.home3)
+                    .centerCrop()
+                    .into(imageView)
+            }
+            // ملف محلي
+            firstImage.isNotEmpty() && File(firstImage).exists() -> {
+                Glide.with(this)
+                    .load(File(firstImage))
+                    .placeholder(R.drawable.home3)
+                    .error(R.drawable.home3)
+                    .centerCrop()
+                    .into(imageView)
+            }
+            else -> imageView.setImageResource(R.drawable.home3)
         }
     }
 
@@ -65,93 +84,61 @@ class propertyDetailsActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val unit = database.unitDao().getUnitById(unitId)
             unit?.let {
-                // ربط البيانات الأساسية
                 findViewById<TextView>(R.id.tvDetailTitle).text = it.title
                 findViewById<TextView>(R.id.tvDetailPrice).text = "${it.price} EGP"
                 findViewById<TextView>(R.id.tvDetailLocation).text = "${it.address}, ${it.governorate}"
                 findViewById<TextView>(R.id.tvDescription).text = it.description
                 landlordUserId = it.landlordId
 
-                // ✅ سجّل الـ click listener هنا بعد ما landlordUserId اتحدد
                 findViewById<View>(R.id.bg_card_landlord).setOnClickListener {
                     val intent = Intent(this@propertyDetailsActivity, profileActivity::class.java)
-                    intent.putExtra("VIEW_USER_ID", landlordUserId)
+                    intent.putExtra(getString(R.string.view_user_id), landlordUserId)
                     startActivity(intent)
                 }
 
-                // تحديث صناديق المميزات
                 setupFeatureBox(R.id.featureBed, R.drawable.bed, "${it.bedrooms} Bedroom")
                 setupFeatureBox(R.id.featureBath, R.drawable.ic_bathroom, "${it.bathrooms} Bathroom")
                 setupFeatureBox(R.id.featureArea, R.drawable.area, "${it.size} m²")
 
-                // إعداد الخريطة
                 setupMap(it.address, "https://maps.google.com/maps?q=${it.address.replace(" ", "+")}")
 
-                //  نحفظ الـ landlordId عشان الكارت يستخدمه
-                landlordUserId = it.landlordId
-
-                // جلب بيانات المالك والاتصال
                 val landlordProfile = database.profileDao().getLandlordByUserId(it.landlordId)
-                val phone = landlordProfile?.phoneNumber ?: ""
-                setupCallButton(phone)
+                setupCallButton(landlordProfile?.phoneNumber ?: "")
 
-                val landlordName = "${landlordProfile?.firstName} ${landlordProfile?.lastName}"
-                findViewById<TextView>(R.id.tvLandlordName).text = landlordName
+                val firstName = if (landlordProfile?.firstName.isNullOrEmpty()) "admin" else landlordProfile?.firstName
+                val lastName  = if (landlordProfile?.lastName.isNullOrEmpty())  "profile" else landlordProfile?.lastName
+                findViewById<TextView>(R.id.tvLandlordName).text = "$firstName $lastName"
 
-                // إعداد الصورة باستخدام Glide
-                val firstImage = it.images.split(",").firstOrNull()?.trim() ?: ""
-                val imageView = findViewById<ImageView>(R.id.ivDetailImage)
-                if (firstImage.isNotEmpty()) {
-                    val file = File(firstImage)
-                    if (file.exists()) {
-                        Glide.with(this@propertyDetailsActivity).load(file).into(imageView)
-                    } else {
-                        imageView.setImageResource(R.drawable.home3)
-                    }
-                } else {
-                    imageView.setImageResource(R.drawable.home3)
-                }
+                // ✅ تحميل الصورة بنفس المنطق بتاع الـ Card
+                loadImage(it.images, findViewById(R.id.ivDetailImage))
             }
         }
     }
 
     private fun loadFromIntentFallback() {
-        val title = intent.getStringExtra("TITLE") ?: "The Green House"
-        val price = intent.getStringExtra("PRICE") ?: "650"
-        val address = intent.getStringExtra("ADDRESS") ?: "Shalaby, St 10"
-        val desc = intent.getStringExtra("DESC") ?: "A cozy studio near the university..."
-        val mapLink = intent.getStringExtra("MAP_LINK") ?: "https://maps.google.com"
-        val beds = intent.getStringExtra("BEDS") ?: "1"
-        val baths = intent.getStringExtra("BATHS") ?: "1"
-        val area = intent.getStringExtra("AREA") ?: "110"
+        val title    = intent.getStringExtra(getString(R.string.TITLE))    ?: getString(R.string.the_green_house)
+        val price    = intent.getStringExtra(getString(R.string.PRICE))    ?: getString(R.string._650)
+        val address  = intent.getStringExtra(getString(R.string.Address))  ?: getString(R.string.shalaby_st_10)
+        val desc     = intent.getStringExtra(getString(R.string.desc))     ?: getString(R.string.a_cozy_studio)
+        val mapLink  = intent.getStringExtra(getString(R.string.map_link)) ?: getString(R.string.https_maps_google_com)
+        val beds     = intent.getStringExtra(getString(R.string.Bedrooms))     ?: "1"
+        val baths    = intent.getStringExtra(getString(R.string.Bathrooms))    ?: "1"
+        val area     = intent.getStringExtra(getString(R.string.area))     ?: "110"
+        val imageUrl = intent.getStringExtra(getString(R.string.IMAGE))    ?: ""
 
-        findViewById<TextView>(R.id.tvDetailTitle).text = title
-        findViewById<TextView>(R.id.tvDetailPrice).text = "$price EGP"
+        findViewById<TextView>(R.id.tvDetailTitle).text    = title
+        findViewById<TextView>(R.id.tvDetailPrice).text    = "$price EGP"
         findViewById<TextView>(R.id.tvDetailLocation).text = address
-        findViewById<TextView>(R.id.tvDescription).text = desc
+        findViewById<TextView>(R.id.tvDescription).text    = desc
 
-        setupFeatureBox(R.id.featureBed, R.drawable.bed, "$beds Bedroom")
-        setupFeatureBox(R.id.featureBath, R.drawable.ic_bathroom, "$baths Bathroom")
-        setupFeatureBox(R.id.featureArea, R.drawable.area, "$area m²")
+        setupFeatureBox(R.id.featureBed,  R.drawable.bed,         "$beds Bedroom")
+        setupFeatureBox(R.id.featureBath, R.drawable.ic_bathroom,  "$baths Bathroom")
+        setupFeatureBox(R.id.featureArea, R.drawable.area,         "$area m²")
 
-        // تحميل الصورة: محاولة قراءة رابط نصي، وإن لم يوجد، نستخدم الـ ID من الـ Resources
-        val imagePath = intent.getStringExtra("IMAGE_PATH") ?: ""
-        val imageView = findViewById<ImageView>(R.id.ivDetailImage)
-        if (imagePath.isNotEmpty()) {
-            val file = File(imagePath)
-            if (file.exists()) {
-                Glide.with(this).load(file).into(imageView)
-            } else {
-                imageView.setImageResource(R.drawable.home3)
-            }
-        } else {
-            val imageRes = intent.getIntExtra("IMAGE", R.drawable.home3)
-            imageView.setImageResource(imageRes)
-        }
+        // ✅ نفس الدالة المشتركة
+        loadImage(imageUrl, findViewById(R.id.ivDetailImage))
 
         setupMap(address, mapLink)
-
-        // زر الاتصال في حالة الـ Fallback
         setupCallButton("0123456789")
     }
 
@@ -160,9 +147,8 @@ class propertyDetailsActivity : AppCompatActivity() {
         webView.settings.javaScriptEnabled = true
         webView.webViewClient = WebViewClient()
 
-        // إعداد الخريطة الذكية لدعم الـ Dark Mode برمجياً و بـ CSS
         val mapFilter = if (isDarkMode) "invert(90%) hue-rotate(180deg)" else "none"
-        val bgHex = if (isDarkMode) "#121212" else "#FFFFFF"
+        val bgHex     = if (isDarkMode) "#121212" else "#FFFFFF"
 
         val htmlData = """
             <html>
@@ -180,75 +166,54 @@ class propertyDetailsActivity : AppCompatActivity() {
 
         webView.loadDataWithBaseURL(null, htmlData, "text/html", "UTF-8", null)
 
-        // التحكم في الـ ForceDark للـ WebView
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             @Suppress("DEPRECATION")
             webView.settings.forceDark = if (isDarkMode) WebSettings.FORCE_DARK_ON else WebSettings.FORCE_DARK_OFF
         }
 
-        // فتح الخرائط الخارجية
         findViewById<TextView>(R.id.btnOpenMaps).setOnClickListener {
             val gmmIntentUri = Uri.parse("geo:0,0?q=${address.replace(" ", "+")}")
             val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
             mapIntent.setPackage("com.google.android.apps.maps")
-
             if (mapIntent.resolveActivity(packageManager) != null) {
                 startActivity(mapIntent)
             } else {
-                val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse(fallbackMapLink))
-                startActivity(webIntent)
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(fallbackMapLink)))
             }
         }
     }
 
     private fun setupCallButton(phoneNumber: String) {
-        val btnCall = findViewById<Button>(R.id.btnCallLandlord)
-        btnCall.setOnClickListener {
+        findViewById<Button>(R.id.btnCallLandlord).setOnClickListener {
             if (phoneNumber.isEmpty()) {
                 Toast.makeText(this, "No phone number available", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-
-            // استخدام ACTION_DIAL كما حدد الدكتور لفتح لوحة الاتصال بأمان
-            val intent = Intent(Intent.ACTION_DIAL).apply {
-                data = Uri.parse("tel:$phoneNumber")
-            }
-
-            if (intent.resolveActivity(packageManager) != null) {
-                startActivity(intent)
-            } else {
-                Toast.makeText(this, "No dialer app found", Toast.LENGTH_SHORT).show()
-            }
+            val intent = Intent(Intent.ACTION_DIAL).apply { data = Uri.parse("tel:$phoneNumber") }
+            if (intent.resolveActivity(packageManager) != null) startActivity(intent)
+            else Toast.makeText(this, "No dialer app found", Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun applyDarkModeProgrammatically() {
-        val rootView = findViewById<View>(android.R.id.content).rootView
-        rootView.setBackgroundColor("#121212".toColorInt())
-
-        findViewById<View>(R.id.ivDetailImage).parent.let {
-            (it as? View)?.setBackgroundColor("#121212".toColorInt())
-        }
-
+        findViewById<View>(android.R.id.content).rootView.setBackgroundColor("#121212".toColorInt())
         findViewById<TextView>(R.id.tvDetailTitle).setTextColor(Color.WHITE)
         findViewById<TextView>(R.id.tvDescription).setTextColor("#BBBBBB".toColorInt())
         findViewById<TextView>(R.id.tvDetailLocation).setTextColor("#BBBBBB".toColorInt())
         findViewById<TextView>(R.id.tvAboutTitle).setTextColor(Color.WHITE)
         findViewById<TextView>(R.id.tvLocationMapTitle).setTextColor(Color.WHITE)
         findViewById<TextView>(R.id.tvDetailPrice).setTextColor("#2196F3".toColorInt())
-
-        updateFeatureCardStyle(R.id.featureBed, "#333333", Color.WHITE)
+        updateFeatureCardStyle(R.id.featureBed,  "#333333", Color.WHITE)
         updateFeatureCardStyle(R.id.featureBath, "#333333", Color.WHITE)
         updateFeatureCardStyle(R.id.featureArea, "#333333", Color.WHITE)
-
-        val cardLandlord = findViewById<androidx.cardview.widget.CardView>(R.id.bg_card_landlord)
-        cardLandlord.setCardBackgroundColor("#252525".toColorInt())
+        findViewById<androidx.cardview.widget.CardView>(R.id.bg_card_landlord)
+            .setCardBackgroundColor("#252525".toColorInt())
         findViewById<TextView>(R.id.tvLandlordName).setTextColor(Color.WHITE)
         findViewById<TextView>(R.id.tvOwnerLabel).setTextColor("#888888".toColorInt())
     }
 
     private fun applyLightModeSettings() {
-        updateFeatureCardStyle(R.id.featureBed, "#F5F5F5", Color.BLACK)
+        updateFeatureCardStyle(R.id.featureBed,  "#F5F5F5", Color.BLACK)
         updateFeatureCardStyle(R.id.featureBath, "#F5F5F5", Color.BLACK)
         updateFeatureCardStyle(R.id.featureArea, "#F5F5F5", Color.BLACK)
     }

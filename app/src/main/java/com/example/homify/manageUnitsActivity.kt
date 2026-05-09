@@ -73,9 +73,9 @@ class manageUnitsActivity : AppCompatActivity() {
                 units(
                     id       = unit.id,
                     name     = unit.title,
-                    landlord = "Landlord #${unit.landlordId}",
+                    landlord = getString(R.string.landlord_Hash, unit.landlordId),
                     details  = "${unit.governorate} • ${unit.size} m² • ${unit.unitType.name}",
-                    price    = "${unit.price.toInt()} EGP/mo",
+                    price    = getString(R.string.egp_mo, unit.price.toInt()),
                     imagePath = unit.images.split(",").firstOrNull()?.trim()
                 )
             })

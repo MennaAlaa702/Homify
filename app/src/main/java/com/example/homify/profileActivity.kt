@@ -145,7 +145,7 @@ class profileActivity : AppCompatActivity() {
         // ✅ زرار الصورة مرة واحدة بس
         findViewById<FloatingActionButton>(R.id.fabEditPhoto).setOnClickListener {
             if (!isViewingOtherUser) {
-                pickImageLauncher.launch("image/*")
+                pickImageLauncher.launch(getString(R.string.image_as))
             }
         }
 
@@ -216,7 +216,7 @@ class profileActivity : AppCompatActivity() {
     private fun copyImageToInternalStorage(uri: Uri): String? {
         return try {
             val inputStream = contentResolver.openInputStream(uri)
-            val file = File(filesDir, "profile_picture.jpg")
+            val file = File(filesDir, getString(R.string.profile_picture_jpg))
             val outputStream = FileOutputStream(file)
             inputStream?.use { input ->
                 outputStream.use { output ->
